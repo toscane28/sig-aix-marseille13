@@ -23,7 +23,6 @@ Cette formulation reconstitue le niveau de vie moyen des habitants de l'IRIS à 
 #| warning: false
 library(sf)
 library(mapsf)
-library(mapview)
 ```
 
 ## Chargement des données
@@ -163,25 +162,6 @@ boxplot(
   xlab   = "",
   main   = "Distribution du niveau de vie par IRIS — Aix vs Marseille"
 )
-```
-
-## Carte interactive des IRIS
-
-La carte ci-dessous permet d'explorer le niveau de vie agrégé à l'échelle de chaque IRIS de manière dynamique. Cliquez sur un IRIS pour voir son code, son nom, sa commune et son niveau de vie moyen exact.
-
-```{r}
-#| message: false
-#| warning: false
-
-iris_interactif <- iris_rev[, c("code_iris", "nom_iris", "nom_commune", "niveau_vie_iris")]
-iris_interactif$niveau_vie_iris <- round(iris_interactif$niveau_vie_iris)
-
-mapview(iris_interactif,
-        zcol = "niveau_vie_iris",
-        layer.name = "Niveau de vie moyen par IRIS (€/an/UC)",
-        col.regions = hcl.colors(7, "RdYlGn"),
-        alpha.regions = 0.7,
-        lwd = 0.5)
 ```
 
 ## Lecture des résultats
