@@ -1,6 +1,9 @@
 project:
   type: website
   output-dir: docs
+  render:
+    - "*.qmd"
+    - "!backups/"
 
 website:
   title: "Inégalités Aix-Marseille"

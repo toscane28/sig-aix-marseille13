@@ -17,3 +17,4 @@ data/
 *_avant_*.qmd
 *_au_cas_ou.qmd
 _quarto_avant_*.yml
+_freeze/
