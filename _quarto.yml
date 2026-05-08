@@ -14,8 +14,22 @@ website:
         text: GT Raster
       - href: jointure.qmd
         text: Jointures
+  page-footer:
+    center: "Joachim Sainz & Toscane Dolorian — Devoir SIG 2026"
+
+lang: fr
 
 format:
   html:
-    theme: cosmo
+    theme: flatly
     toc: true
+    toc-title: "Sur cette page"
+    toc-depth: 3
+    smooth-scroll: true
+    code-fold: true
+    code-summary: "Voir le code"
+    fig-cap-location: bottom
+
+execute:
+  freeze: auto
+

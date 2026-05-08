@@ -13,3 +13,7 @@ data/
 /jointure_files/ 
 /raster_files/ 
 /index_files/ 
+*_backup.qmd
+*_avant_*.qmd
+*_au_cas_ou.qmd
+_quarto_avant_*.yml
