@@ -1,0 +1,21 @@
+project:
+  type: website
+  output-dir: docs
+
+website:
+  title: "Inégalités Aix-Marseille"
+  navbar:
+    left:
+      - href: index.qmd
+        text: Introduction
+      - href: vecteur.qmd
+        text: GT Vecteur
+      - href: raster.qmd
+        text: GT Raster
+      - href: jointure.qmd
+        text: Jointures
+
+format:
+  html:
+    theme: cosmo
+    toc: true

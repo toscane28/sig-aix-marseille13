@@ -1,0 +1,226 @@
+[
+  {
+    "objectID": "vecteur.html",
+    "href": "vecteur.html",
+    "title": "Géotraitements Vecteur",
+    "section": "",
+    "text": "Cette page présente les géotraitements vectoriels appliqués aux données IRIS et Filosofi pour analyser les inégalités de revenus à Aix-en-Provence et Marseille."
+  },
+  {
+    "objectID": "vecteur.html#introduction",
+    "href": "vecteur.html#introduction",
+    "title": "Géotraitements Vecteur",
+    "section": "",
+    "text": "Cette page présente les géotraitements vectoriels appliqués aux données IRIS et Filosofi pour analyser les inégalités de revenus à Aix-en-Provence et Marseille."
+  },
+  {
+    "objectID": "vecteur.html#schéma-de-géotraitement",
+    "href": "vecteur.html#schéma-de-géotraitement",
+    "title": "Géotraitements Vecteur",
+    "section": "Schéma de géotraitement",
+    "text": "Schéma de géotraitement\nAdmin Express (couche \"commune\", 34 879 communes)\n  └─► Filtre nom_officiel %in% {\"Aix-en-Provence\", \"Marseille\"}\n        └─► communes  ─────────────────────────────────────────┐\n                                                               │\nIRIS France (couche \"contours_iris_pe\", 48 512 IRIS)           │\n  └─► wkt_filter sur emprise + st_intersection                 │\n        └─► iris.gpkg                                          │\n                                                               │\nFilosofi (couche \"carreaux_200m_met\", 2 298 582 carreaux)      │\n  └─► wkt_filter sur emprise + st_filter ◄─────────────────────┘\n        └─► filosofi.gpkg"
+  },
+  {
+    "objectID": "vecteur.html#librairies",
+    "href": "vecteur.html#librairies",
+    "title": "Géotraitements Vecteur",
+    "section": "Librairies",
+    "text": "Librairies\n\nlibrary(sf)\nlibrary(mapsf)"
+  },
+  {
+    "objectID": "vecteur.html#chargement-et-préparation-des-données",
+    "href": "vecteur.html#chargement-et-préparation-des-données",
+    "title": "Géotraitements Vecteur",
+    "section": "Chargement et préparation des données",
+    "text": "Chargement et préparation des données\n\npath_admin &lt;- \"data/adminexpress/ADE-COG-CARTOPLUS_4-0_GPKG_LAMB93_FRA-ED2025-01-01.gpkg\"\npath_iris  &lt;- \"data/contours-iris.gpkg\"\npath_filo  &lt;- \"data/Filosofi2021_carreaux_200m_gpkg/carreaux_200m_met.gpkg\"\n\n# 1. Communes Aix + Marseille\ncommunes_fr &lt;- st_read(path_admin, layer = \"commune\", quiet = TRUE)\ncommunes &lt;- communes_fr[\n  communes_fr$nom_officiel %in% c(\"Aix-en-Provence\", \"Marseille\"), \n]\ncat(\"Communes sélectionnées :\", nrow(communes), \"\\n\")\n\nCommunes sélectionnées : 2 \n\n\n\n# 2. IRIS découpés sur l'emprise des communes\nemprise_wkt &lt;- st_as_text(st_as_sfc(st_bbox(communes)))\niris_fr &lt;- st_read(path_iris, layer = \"contours_iris_pe\",\n                   wkt_filter = emprise_wkt, quiet = TRUE)\niris &lt;- st_filter(iris_fr, communes)\ncat(\"IRIS sur Aix + Marseille :\", nrow(iris), \"\\n\")\n\nIRIS sur Aix + Marseille : 487 \n\n\n\n# 3. Carreaux Filosofi découpés sur l'emprise\nfilosofi_fr &lt;- st_read(path_filo, layer = \"carreaux_200m_met\",\n                       wkt_filter = emprise_wkt, quiet = TRUE)\nfilosofi &lt;- st_filter(filosofi_fr, communes)\ncat(\"Carreaux sur Aix + Marseille :\", nrow(filosofi), \"\\n\")\n\nCarreaux sur Aix + Marseille : 5681 \n\n\n\n# 4. Associer chaque carreau à sa ville\nfilosofi &lt;- st_join(\n  filosofi,\n  communes[, c(\"nom_officiel\", \"geometrie_cartoplus\")],\n  join = st_within\n)\nfilosofi$ville &lt;- filosofi$nom_officiel\n\n# 5. Sauvegarder\nst_write(communes, \"data/communes.gpkg\", delete_dsn = TRUE, quiet = TRUE)\nst_write(iris,     \"data/iris.gpkg\",     delete_dsn = TRUE, quiet = TRUE)\nst_write(filosofi, \"data/filosofi.gpkg\", delete_dsn = TRUE, quiet = TRUE)\ncat(\"Données sauvegardées dans data/ ✓\\n\")\n\nDonnées sauvegardées dans data/ ✓"
+  },
+  {
+    "objectID": "vecteur.html#carte-du-revenu-médian-par-carreau",
+    "href": "vecteur.html#carte-du-revenu-médian-par-carreau",
+    "title": "Géotraitements Vecteur",
+    "section": "Carte du revenu médian par carreau",
+    "text": "Carte du revenu médian par carreau\n\nmf_map(communes, col = \"grey90\", border = \"white\")\nmf_map(\n  filosofi,\n  type      = \"choro\",\n  var       = \"ind_snv\",\n  nbreaks   = 5,\n  pal       = \"Reds\",\n  border    = NA,\n  leg_title = \"Revenu médian\\n(€/UC)\",\n  add       = TRUE\n)\nmf_map(communes, col = NA, border = \"black\", lwd = 1.5, add = TRUE)\nmf_title(\"Revenus médians par carreau 200m\\nAix-en-Provence et Marseille\")\nmf_credits(\"Sources : INSEE Filosofi 2021 | IGN Admin Express 2025\")"
+  },
+  {
+    "objectID": "vecteur.html#comparaison-centre-vs-périphérie",
+    "href": "vecteur.html#comparaison-centre-vs-périphérie",
+    "title": "Géotraitements Vecteur",
+    "section": "Comparaison centre vs périphérie",
+    "text": "Comparaison centre vs périphérie\n\ncentre_m_pt &lt;- st_centroid(communes[communes$nom_officiel == \"Marseille\", ])\ncentre_a_pt &lt;- st_centroid(communes[communes$nom_officiel == \"Aix-en-Provence\", ])\n\nbuffer_m &lt;- st_buffer(centre_m_pt, 2000)\nbuffer_a &lt;- st_buffer(centre_a_pt, 2000)\n\nfilo_m &lt;- filosofi[!is.na(filosofi$ville) & filosofi$ville == \"Marseille\", ]\nfilo_a &lt;- filosofi[!is.na(filosofi$ville) & filosofi$ville == \"Aix-en-Provence\", ]\n\nin_m &lt;- st_intersects(filo_m, buffer_m, sparse = FALSE)[, 1]\nin_a &lt;- st_intersects(filo_a, buffer_a, sparse = FALSE)[, 1]\n\ncat(\"=== MARSEILLE ===\\n\")\n\n=== MARSEILLE ===\n\ncat(\"  Centre (&lt;2km)  — médiane :\", round(median(filo_m$ind_snv[in_m],  na.rm = TRUE)), \"€\\n\")\n\n  Centre (&lt;2km)  — médiane : 6149434 €\n\ncat(\"  Périphérie     — médiane :\", round(median(filo_m$ind_snv[!in_m], na.rm = TRUE)), \"€\\n\\n\")\n\n  Périphérie     — médiane : 3023872 €\n\ncat(\"=== AIX-EN-PROVENCE ===\\n\")\n\n=== AIX-EN-PROVENCE ===\n\ncat(\"  Centre (&lt;2km)  — médiane :\", round(median(filo_a$ind_snv[in_a],  na.rm = TRUE)), \"€\\n\")\n\n  Centre (&lt;2km)  — médiane : 449529 €\n\ncat(\"  Périphérie     — médiane :\", round(median(filo_a$ind_snv[!in_a], na.rm = TRUE)), \"€\\n\")\n\n  Périphérie     — médiane : 355111 €\n\n\n\nmf_map(communes, col = \"grey95\", border = \"grey60\")\nmf_map(\n  filosofi,\n  type      = \"choro\",\n  var       = \"ind_snv\",\n  nbreaks   = 5,\n  pal       = \"RdYlGn\",\n  border    = NA,\n  alpha     = 0.8,\n  add       = TRUE,\n  leg_title = \"Revenu médian\\n(€/UC)\"\n)\nmf_map(communes, col = NA, border = \"black\", lwd = 1.5, add = TRUE)\nmf_map(buffer_m, col = NA, border = \"red\",  lwd = 2, lty = 2, add = TRUE)\nmf_map(buffer_a, col = NA, border = \"blue\", lwd = 2, lty = 2, add = TRUE)\nmf_title(\"Revenus médians — zones centre (2km) et périphérie\")\nmf_credits(\"Sources : INSEE Filosofi 2021 | IGN Admin Express 2025\")"
+  },
+  {
+    "objectID": "jointure.html",
+    "href": "jointure.html",
+    "title": "Jointures spatiales",
+    "section": "",
+    "text": "Cette page présente la jointure spatiale entre les carreaux Filosofi (200m) et les IRIS, permettant d’agréger les revenus à une maille administrative."
+  },
+  {
+    "objectID": "jointure.html#introduction",
+    "href": "jointure.html#introduction",
+    "title": "Jointures spatiales",
+    "section": "",
+    "text": "Cette page présente la jointure spatiale entre les carreaux Filosofi (200m) et les IRIS, permettant d’agréger les revenus à une maille administrative."
+  },
+  {
+    "objectID": "jointure.html#schéma-de-géotraitement",
+    "href": "jointure.html#schéma-de-géotraitement",
+    "title": "Jointures spatiales",
+    "section": "Schéma de géotraitement",
+    "text": "Schéma de géotraitement\nfilosofi.gpkg ──┐\n                ├──► st_join (st_within) ──► revenu par carreau + CODE_IRIS\niris.gpkg     ──┘                        ──► aggregate (médiane) par IRIS\n                                         ──► merge avec géométries IRIS\n                                         ──► iris_revenus  ──► carte choroplèthe"
+  },
+  {
+    "objectID": "jointure.html#librairies",
+    "href": "jointure.html#librairies",
+    "title": "Jointures spatiales",
+    "section": "Librairies",
+    "text": "Librairies\n\nlibrary(sf)\nlibrary(mapsf)"
+  },
+  {
+    "objectID": "jointure.html#chargement-des-données",
+    "href": "jointure.html#chargement-des-données",
+    "title": "Jointures spatiales",
+    "section": "Chargement des données",
+    "text": "Chargement des données\n\niris     &lt;- st_read(\"data/iris.gpkg\",     quiet = TRUE)\nfilosofi &lt;- st_read(\"data/filosofi.gpkg\", quiet = TRUE)\ncommunes &lt;- st_read(\"data/communes.gpkg\", quiet = TRUE)\n\ncat(\"IRIS     :\", nrow(iris), \"\\n\")\n\nIRIS     : 487 \n\ncat(\"Carreaux :\", nrow(filosofi), \"\\n\")\n\nCarreaux : 5681"
+  },
+  {
+    "objectID": "jointure.html#jointure-spatiale-carreaux-iris",
+    "href": "jointure.html#jointure-spatiale-carreaux-iris",
+    "title": "Jointures spatiales",
+    "section": "Jointure spatiale carreaux → IRIS",
+    "text": "Jointure spatiale carreaux → IRIS\n\n# Joindre chaque carreau à l'IRIS qui le contient\n# On garde seulement les colonnes utiles de iris\njoin &lt;- st_join(\n  filosofi[, c(\"ind_snv\", \"geom\")],\n  iris[, c(\"code_iris\", \"nom_iris\", \"nom_commune\", \"geom\")],\n  join = st_within\n)\n\ncat(\"Carreaux joints à un IRIS :\", sum(!is.na(join$code_iris)), \"\\n\")\n\nCarreaux joints à un IRIS : 2785 \n\ncat(\"Carreaux sans IRIS        :\", sum(is.na(join$code_iris)), \"\\n\")\n\nCarreaux sans IRIS        : 2896"
+  },
+  {
+    "objectID": "jointure.html#agrégation-du-revenu-médian-par-iris",
+    "href": "jointure.html#agrégation-du-revenu-médian-par-iris",
+    "title": "Jointures spatiales",
+    "section": "Agrégation du revenu médian par IRIS",
+    "text": "Agrégation du revenu médian par IRIS\n\ndf &lt;- st_drop_geometry(join)\ndf &lt;- df[!is.na(df$code_iris) & !is.na(df$ind_snv), ]\n\nrevenu_iris &lt;- aggregate(\n  df$ind_snv,\n  by  = list(code_iris = df$code_iris),\n  FUN = median,\n  na.rm = TRUE\n)\nnames(revenu_iris)[2] &lt;- \"revenu_median\"\n\n# Fusionner avec les géométries IRIS\niris_rev &lt;- merge(iris, revenu_iris, by = \"code_iris\")\n\ncat(\"IRIS avec données de revenu :\", nrow(iris_rev), \"\\n\")\n\nIRIS avec données de revenu : 254 \n\nsummary(iris_rev$revenu_median)\n\n    Min.  1st Qu.   Median     Mean  3rd Qu.     Max. \n   36555  1415243  3730279  5485250  7133378 44280522"
+  },
+  {
+    "objectID": "jointure.html#carte-des-revenus-médians-par-iris",
+    "href": "jointure.html#carte-des-revenus-médians-par-iris",
+    "title": "Jointures spatiales",
+    "section": "Carte des revenus médians par IRIS",
+    "text": "Carte des revenus médians par IRIS\n\nmf_map(communes, col = \"grey95\", border = \"grey50\")\nmf_map(\n  iris_rev,\n  type      = \"choro\",\n  var       = \"revenu_median\",\n  nbreaks   = 5,\n  pal       = \"RdYlGn\",\n  border    = \"white\",\n  lwd       = 0.3,\n  leg_title = \"Revenu médian\\n(€/UC)\",\n  add       = TRUE\n)\nmf_map(communes, col = NA, border = \"black\", lwd = 1.5, add = TRUE)\nmf_title(\"Revenu médian par IRIS — Aix-en-Provence et Marseille\")\nmf_credits(\"Sources : INSEE Filosofi 2021 × IGN IRIS 2025\")"
+  },
+  {
+    "objectID": "jointure.html#comparaison-par-ville",
+    "href": "jointure.html#comparaison-par-ville",
+    "title": "Jointures spatiales",
+    "section": "Comparaison par ville",
+    "text": "Comparaison par ville\n\niris_rev$ville &lt;- iris_rev$nom_commune\n\n# Résumé statistique par ville\ntapply(iris_rev$revenu_median, iris_rev$ville, function(x) {\n  c(Minimum  = round(min(x, na.rm=TRUE)),\n    Médiane  = round(median(x, na.rm=TRUE)),\n    Moyenne  = round(mean(x, na.rm=TRUE)),\n    Maximum  = round(max(x, na.rm=TRUE)))\n})\n\n$`Aix-en-Provence`\n Minimum  Médiane  Moyenne  Maximum \n  161168  2868484  3942261 11068514 \n\n$`Marseille 10e Arrondissement`\n Minimum  Médiane  Moyenne  Maximum \n  560602  5700144  7299815 24227813 \n\n$`Marseille 11e Arrondissement`\n Minimum  Médiane  Moyenne  Maximum \n  104647  2391029  3501299 13023172 \n\n$`Marseille 12e Arrondissement`\n Minimum  Médiane  Moyenne  Maximum \n 1534599  5578312  6264352 18475309 \n\n$`Marseille 13e Arrondissement`\n Minimum  Médiane  Moyenne  Maximum \n  150828  3659397  4700498 13370791 \n\n$`Marseille 14e Arrondissement`\n Minimum  Médiane  Moyenne  Maximum \n  104029  1822868  3288425 22748332 \n\n$`Marseille 15e Arrondissement`\n Minimum  Médiane  Moyenne  Maximum \n   36555  2686581  6701482 44280522 \n\n$`Marseille 16e Arrondissement`\nMinimum Médiane Moyenne Maximum \n 399504 1590337 2031799 5708109 \n\n$`Marseille 1er Arrondissement`\n Minimum  Médiane  Moyenne  Maximum \n13723964 13723964 13723964 13723964 \n\n$`Marseille 2e Arrondissement`\nMinimum Médiane Moyenne Maximum \n1267911 2779607 2779607 4291303 \n\n$`Marseille 3e Arrondissement`\n Minimum  Médiane  Moyenne  Maximum \n 7657547  9973347 11353054 16428269 \n\n$`Marseille 4e Arrondissement`\n Minimum  Médiane  Moyenne  Maximum \n 5921870  9417871 12183612 22207572 \n\n$`Marseille 5e Arrondissement`\n Minimum  Médiane  Moyenne  Maximum \n  276849 13054476  9171992 14184650 \n\n$`Marseille 7e Arrondissement`\n Minimum  Médiane  Moyenne  Maximum \n 1076527  6271833  8235139 24791919 \n\n$`Marseille 8e Arrondissement`\n Minimum  Médiane  Moyenne  Maximum \n  156217  6002531  7405853 22649602 \n\n$`Marseille 9e Arrondissement`\n Minimum  Médiane  Moyenne  Maximum \n   84900  3548733  4941767 17069218"
+  },
+  {
+    "objectID": "jointure.html#conclusion",
+    "href": "jointure.html#conclusion",
+    "title": "Jointures spatiales",
+    "section": "Conclusion",
+    "text": "Conclusion\nLa jointure spatiale confirme le contraste entre les deux villes : Aix-en-Provence présente des IRIS avec des revenus médians globalement plus élevés, tandis que Marseille montre une forte hétérogénéité, avec des IRIS très pauvres concentrés dans les quartiers nord et des IRIS aisés dans les arrondissements sud."
+  },
+  {
+    "objectID": "index.html",
+    "href": "index.html",
+    "title": "Inégalités centre-périphérie à Aix-en-Provence et Marseille",
+    "section": "",
+    "text": "Ce projet analyse les inégalités de revenus entre le centre-ville et la périphérie de deux grandes villes méditerranéennes : Aix-en-Provence et Marseille.\nCes deux villes constituent un cas d’étude particulièrement intéressant car elles présentent des profils socio-spatiaux supposément opposés : Aix-en-Provence est historiquement associée à une population aisée et un centre-ville riche, tandis que Marseille est marquée par une pauvreté concentrée dans certains quartiers centraux (notamment les quartiers nord) contrastant avec des périphéries résidentielles plus aisées."
+  },
+  {
+    "objectID": "index.html#introduction",
+    "href": "index.html#introduction",
+    "title": "Inégalités centre-périphérie à Aix-en-Provence et Marseille",
+    "section": "",
+    "text": "Ce projet analyse les inégalités de revenus entre le centre-ville et la périphérie de deux grandes villes méditerranéennes : Aix-en-Provence et Marseille.\nCes deux villes constituent un cas d’étude particulièrement intéressant car elles présentent des profils socio-spatiaux supposément opposés : Aix-en-Provence est historiquement associée à une population aisée et un centre-ville riche, tandis que Marseille est marquée par une pauvreté concentrée dans certains quartiers centraux (notamment les quartiers nord) contrastant avec des périphéries résidentielles plus aisées."
+  },
+  {
+    "objectID": "index.html#problématique",
+    "href": "index.html#problématique",
+    "title": "Inégalités centre-périphérie à Aix-en-Provence et Marseille",
+    "section": "Problématique",
+    "text": "Problématique\nDans quelle mesure les inégalités de revenus entre centre et périphérie diffèrent-elles entre Aix-en-Provence et Marseille ?\nL’hypothèse est double :\n\nÀ Marseille, le centre concentre la pauvreté tandis que la périphérie résidentielle (sud, est) présente des revenus plus élevés.\nÀ Aix-en-Provence, le schéma est inversé : le centre historique est riche et les marges périphériques sont plus modestes."
+  },
+  {
+    "objectID": "index.html#données-utilisées",
+    "href": "index.html#données-utilisées",
+    "title": "Inégalités centre-périphérie à Aix-en-Provence et Marseille",
+    "section": "Données utilisées",
+    "text": "Données utilisées\n\n\n\n\n\n\n\n\n\nDonnée\nSource\nMillésime\nUsage dans le projet\n\n\n\n\nContours IRIS (PE)\nIGN / cartes.gouv.fr\n2025\nMaillage infra-communal\n\n\nCarreaux 200m Filosofi\nINSEE\n2021\nRevenu médian par unité de consommation\n\n\nAdmin Express COG Cartoplus\nIGN / cartes.gouv.fr\n2025\nLimites communales (Lambert-93)"
+  },
+  {
+    "objectID": "index.html#organisation-du-site",
+    "href": "index.html#organisation-du-site",
+    "title": "Inégalités centre-périphérie à Aix-en-Provence et Marseille",
+    "section": "Organisation du site",
+    "text": "Organisation du site\n\nGT Vecteur : préparation des données, cartes de revenus par carreau, comparaison centre/périphérie\nGT Raster : raster de distance au centre, relation distance-revenu\nJointures : agrégation des carreaux Filosofi à l’échelle des IRIS"
+  },
+  {
+    "objectID": "index.html#conclusion",
+    "href": "index.html#conclusion",
+    "title": "Inégalités centre-périphérie à Aix-en-Provence et Marseille",
+    "section": "Conclusion",
+    "text": "Conclusion\n(à compléter après les analyses)\nLes résultats confirment-ils l’hypothèse d’une inversion du gradient centre-périphérie entre les deux villes ? Les cartes et analyses des pages suivantes apportent des éléments de réponse quantitatifs à cette question."
+  },
+  {
+    "objectID": "raster.html",
+    "href": "raster.html",
+    "title": "Géotraitements Raster",
+    "section": "",
+    "text": "Cette page présente les géotraitements raster : création d’un raster de distance au centre-ville et analyse de la relation entre distance et revenu médian."
+  },
+  {
+    "objectID": "raster.html#introduction",
+    "href": "raster.html#introduction",
+    "title": "Géotraitements Raster",
+    "section": "",
+    "text": "Cette page présente les géotraitements raster : création d’un raster de distance au centre-ville et analyse de la relation entre distance et revenu médian."
+  },
+  {
+    "objectID": "raster.html#schéma-de-géotraitement",
+    "href": "raster.html#schéma-de-géotraitement",
+    "title": "Géotraitements Raster",
+    "section": "Schéma de géotraitement",
+    "text": "Schéma de géotraitement\ncommunes.gpkg  ──► Centroïde Marseille ──┐\ncommunes.gpkg  ──► Emprise raster (200m) ─┤──► Raster distance ──► dist_marseille\n                                          │\nfilosofi.gpkg  ──► Extraction par carreau─┘──► distance par carreau\n                                              ──► Régression revenu ~ distance"
+  },
+  {
+    "objectID": "raster.html#librairies",
+    "href": "raster.html#librairies",
+    "title": "Géotraitements Raster",
+    "section": "Librairies",
+    "text": "Librairies\n\nlibrary(sf)\nlibrary(terra)\nlibrary(mapsf)"
+  },
+  {
+    "objectID": "raster.html#chargement-des-données",
+    "href": "raster.html#chargement-des-données",
+    "title": "Géotraitements Raster",
+    "section": "Chargement des données",
+    "text": "Chargement des données\n\ncommunes &lt;- st_read(\"data/communes.gpkg\", quiet = TRUE)\nfilosofi &lt;- st_read(\"data/filosofi.gpkg\", quiet = TRUE)\n\ncat(\"Communes :\", nrow(communes), \"\\n\")\n\nCommunes : 2 \n\ncat(\"Carreaux :\", nrow(filosofi), \"\\n\")\n\nCarreaux : 5681"
+  },
+  {
+    "objectID": "raster.html#calcul-du-raster-de-distance-au-centre-de-marseille",
+    "href": "raster.html#calcul-du-raster-de-distance-au-centre-de-marseille",
+    "title": "Géotraitements Raster",
+    "section": "Calcul du raster de distance au centre de Marseille",
+    "text": "Calcul du raster de distance au centre de Marseille\n\n# Centroïde de Marseille\nmarseille   &lt;- communes[communes$nom_officiel == \"Marseille\", ]\ncentre_m    &lt;- st_centroid(marseille)\n\n# Raster sur l'emprise des deux communes, résolution 200m (= carreaux Filosofi)\nr_base  &lt;- rast(vect(communes), res = 200)\n\n# Calcul de la distance au centroïde (en mètres)\ndist_r  &lt;- distance(r_base, vect(centre_m))\nnames(dist_r) &lt;- \"distance_m\"\n\n# Affichage\nplot(dist_r, main = \"Distance au centre de Marseille (m)\",\n     col = rev(hcl.colors(50, \"Spectral\")))\nplot(st_geometry(communes), add = TRUE, border = \"white\", lwd = 1.5)\nplot(st_geometry(centre_m), add = TRUE, pch = 4, cex = 2, col = \"red\", lwd = 2)\nlegend(\"bottomright\", legend = \"Centre Marseille\", pch = 4, col = \"red\", bty = \"n\")"
+  },
+  {
+    "objectID": "raster.html#extraction-de-la-distance-pour-chaque-carreau",
+    "href": "raster.html#extraction-de-la-distance-pour-chaque-carreau",
+    "title": "Géotraitements Raster",
+    "section": "Extraction de la distance pour chaque carreau",
+    "text": "Extraction de la distance pour chaque carreau\n\n# Centroïdes des carreaux\nfilosofi_v      &lt;- vect(filosofi)\nfilosofi$dist_m &lt;- extract(dist_r, filosofi_v, fun = mean, na.rm = TRUE, ID = FALSE)[, 1]\n\ncat(\"Distance min :\", round(min(filosofi$dist_m, na.rm = TRUE) / 1000, 1), \"km\\n\")\n\nDistance min : 0.1 km\n\ncat(\"Distance max :\", round(max(filosofi$dist_m, na.rm = TRUE) / 1000, 1), \"km\\n\")\n\nDistance max : 36.6 km"
+  },
+  {
+    "objectID": "raster.html#relation-distance-revenu-médian",
+    "href": "raster.html#relation-distance-revenu-médian",
+    "title": "Géotraitements Raster",
+    "section": "Relation distance — revenu médian",
+    "text": "Relation distance — revenu médian\n\n# Retirer les valeurs manquantes\ndf &lt;- st_drop_geometry(filosofi)\ndf &lt;- df[!is.na(df$dist_m) & !is.na(df$ind_snv), ]\n\n# Nuage de points\nplot(\n  df$dist_m / 1000,\n  df$ind_snv,\n  xlab = \"Distance au centre de Marseille (km)\",\n  ylab = \"Revenu médian (€/UC)\",\n  main = \"Revenu médian vs distance au centre\",\n  pch  = 20,\n  col  = rgb(0.2, 0.4, 0.8, 0.2),\n  cex  = 0.5\n)\n\n# Droite de régression\nmod &lt;- lm(ind_snv ~ dist_m, data = df)\nabline(mod, col = \"red\", lwd = 2)\n\nr2 &lt;- round(summary(mod)$r.squared, 3)\nlegend(\"topright\",\n       legend = paste0(\"R² = \", r2, \"\\npente = \",\n                       round(coef(mod)[2] * 1000, 1), \" €/km\"),\n       bty = \"n\", col = \"red\", lty = 1)"
+  },
+  {
+    "objectID": "raster.html#carte-des-zones-de-distance",
+    "href": "raster.html#carte-des-zones-de-distance",
+    "title": "Géotraitements Raster",
+    "section": "Carte des zones de distance",
+    "text": "Carte des zones de distance\n\nfilosofi$zone_dist &lt;- cut(\n  filosofi$dist_m,\n  breaks = c(0, 2000, 5000, 10000, Inf),\n  labels = c(\"0-2 km (hyper-centre)\",\n             \"2-5 km (centre élargi)\",\n             \"5-10 km (péri-urbain proche)\",\n             \"&gt; 10 km (périphérie)\")\n)\n\nmf_map(communes, col = \"grey95\", border = \"grey50\")\nmf_map(\n  filosofi,\n  type      = \"typo\",\n  var       = \"zone_dist\",\n  pal       = c(\"#d73027\", \"#fc8d59\", \"#fee090\", \"#91bfdb\"),\n  border    = NA,\n  leg_title = \"Zone de distance\",\n  add       = TRUE\n)\nmf_map(communes, col = NA, border = \"black\", lwd = 1.5, add = TRUE)\nmf_title(\"Zonage de distance au centre — Marseille\")\nmf_credits(\"Sources : INSEE Filosofi 2021 | IGN Admin Express 2025 | terra\")"
+  }
+]

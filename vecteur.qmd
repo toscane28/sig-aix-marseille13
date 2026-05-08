@@ -1,0 +1,168 @@
+---
+title: "Géotraitements Vecteur"
+---
+
+## Introduction
+
+Cette page présente les géotraitements vectoriels appliqués aux données IRIS et Filosofi
+pour analyser les inégalités de revenus à Aix-en-Provence et Marseille.
+
+## Schéma de géotraitement
+
+```
+Admin Express (couche "commune", 34 879 communes)
+  └─► Filtre nom_officiel %in% {"Aix-en-Provence", "Marseille"}
+        └─► communes  ─────────────────────────────────────────┐
+                                                               │
+IRIS France (couche "contours_iris_pe", 48 512 IRIS)           │
+  └─► wkt_filter sur emprise + st_intersection                 │
+        └─► iris.gpkg                                          │
+                                                               │
+Filosofi (couche "carreaux_200m_met", 2 298 582 carreaux)      │
+  └─► wkt_filter sur emprise + st_filter ◄─────────────────────┘
+        └─► filosofi.gpkg
+```
+
+## Librairies
+
+```{r}
+#| message: false
+#| warning: false
+library(sf)
+library(mapsf)
+```
+
+## Chargement et préparation des données
+
+```{r}
+#| message: false
+#| warning: false
+
+path_admin <- "data/adminexpress/ADE-COG-CARTOPLUS_4-0_GPKG_LAMB93_FRA-ED2025-01-01.gpkg"
+path_iris  <- "data/contours-iris.gpkg"
+path_filo  <- "data/Filosofi2021_carreaux_200m_gpkg/carreaux_200m_met.gpkg"
+
+# 1. Communes Aix + Marseille
+communes_fr <- st_read(path_admin, layer = "commune", quiet = TRUE)
+communes <- communes_fr[
+  communes_fr$nom_officiel %in% c("Aix-en-Provence", "Marseille"), 
+]
+cat("Communes sélectionnées :", nrow(communes), "\n")
+```
+
+```{r}
+#| message: false
+#| warning: false
+
+# 2. IRIS découpés sur l'emprise des communes
+emprise_wkt <- st_as_text(st_as_sfc(st_bbox(communes)))
+iris_fr <- st_read(path_iris, layer = "contours_iris_pe",
+                   wkt_filter = emprise_wkt, quiet = TRUE)
+iris <- st_filter(iris_fr, communes)
+cat("IRIS sur Aix + Marseille :", nrow(iris), "\n")
+```
+
+```{r}
+#| message: false
+#| warning: false
+
+# 3. Carreaux Filosofi découpés sur l'emprise
+filosofi_fr <- st_read(path_filo, layer = "carreaux_200m_met",
+                       wkt_filter = emprise_wkt, quiet = TRUE)
+filosofi <- st_filter(filosofi_fr, communes)
+cat("Carreaux sur Aix + Marseille :", nrow(filosofi), "\n")
+```
+
+```{r}
+#| message: false
+#| warning: false
+
+# 4. Associer chaque carreau à sa ville
+filosofi <- st_join(
+  filosofi,
+  communes[, c("nom_officiel", "geometrie_cartoplus")],
+  join = st_within
+)
+filosofi$ville <- filosofi$nom_officiel
+
+# 5. Sauvegarder
+st_write(communes, "data/communes.gpkg", delete_dsn = TRUE, quiet = TRUE)
+st_write(iris,     "data/iris.gpkg",     delete_dsn = TRUE, quiet = TRUE)
+st_write(filosofi, "data/filosofi.gpkg", delete_dsn = TRUE, quiet = TRUE)
+cat("Données sauvegardées dans data/ ✓\n")
+```
+
+## Carte du revenu médian par carreau
+
+```{r}
+#| fig-width: 9
+#| fig-height: 7
+#| message: false
+#| warning: false
+
+mf_map(communes, col = "grey90", border = "white")
+mf_map(
+  filosofi,
+  type      = "choro",
+  var       = "ind_snv",
+  nbreaks   = 5,
+  pal       = "Reds",
+  border    = NA,
+  leg_title = "Revenu médian\n(€/UC)",
+  add       = TRUE
+)
+mf_map(communes, col = NA, border = "black", lwd = 1.5, add = TRUE)
+mf_title("Revenus médians par carreau 200m\nAix-en-Provence et Marseille")
+mf_credits("Sources : INSEE Filosofi 2021 | IGN Admin Express 2025")
+```
+
+## Comparaison centre vs périphérie
+
+```{r}
+#| message: false
+#| warning: false
+
+centre_m_pt <- st_centroid(communes[communes$nom_officiel == "Marseille", ])
+centre_a_pt <- st_centroid(communes[communes$nom_officiel == "Aix-en-Provence", ])
+
+buffer_m <- st_buffer(centre_m_pt, 2000)
+buffer_a <- st_buffer(centre_a_pt, 2000)
+
+filo_m <- filosofi[!is.na(filosofi$ville) & filosofi$ville == "Marseille", ]
+filo_a <- filosofi[!is.na(filosofi$ville) & filosofi$ville == "Aix-en-Provence", ]
+
+in_m <- st_intersects(filo_m, buffer_m, sparse = FALSE)[, 1]
+in_a <- st_intersects(filo_a, buffer_a, sparse = FALSE)[, 1]
+
+cat("=== MARSEILLE ===\n")
+cat("  Centre (<2km)  — médiane :", round(median(filo_m$ind_snv[in_m],  na.rm = TRUE)), "€\n")
+cat("  Périphérie     — médiane :", round(median(filo_m$ind_snv[!in_m], na.rm = TRUE)), "€\n\n")
+cat("=== AIX-EN-PROVENCE ===\n")
+cat("  Centre (<2km)  — médiane :", round(median(filo_a$ind_snv[in_a],  na.rm = TRUE)), "€\n")
+cat("  Périphérie     — médiane :", round(median(filo_a$ind_snv[!in_a], na.rm = TRUE)), "€\n")
+```
+
+```{r}
+#| fig-width: 9
+#| fig-height: 7
+#| message: false
+#| warning: false
+
+mf_map(communes, col = "grey95", border = "grey60")
+mf_map(
+  filosofi,
+  type      = "choro",
+  var       = "ind_snv",
+  nbreaks   = 5,
+  pal       = "RdYlGn",
+  border    = NA,
+  alpha     = 0.8,
+  add       = TRUE,
+  leg_title = "Revenu médian\n(€/UC)"
+)
+mf_map(communes, col = NA, border = "black", lwd = 1.5, add = TRUE)
+mf_map(buffer_m, col = NA, border = "red",  lwd = 2, lty = 2, add = TRUE)
+mf_map(buffer_a, col = NA, border = "blue", lwd = 2, lty = 2, add = TRUE)
+mf_title("Revenus médians — zones centre (2km) et périphérie")
+mf_credits("Sources : INSEE Filosofi 2021 | IGN Admin Express 2025")
+```

@@ -1,0 +1,128 @@
+---
+title: "Jointures spatiales"
+---
+
+## Introduction
+
+Cette page présente la jointure spatiale entre les carreaux Filosofi (200m) et les IRIS, permettant d'agréger les revenus à une maille administrative.
+
+## Schéma de géotraitement
+
+```         
+filosofi.gpkg ──┐
+                ├──► st_join (st_within) ──► revenu par carreau + CODE_IRIS
+iris.gpkg     ──┘                        ──► aggregate (médiane) par IRIS
+                                         ──► merge avec géométries IRIS
+                                         ──► iris_revenus  ──► carte choroplèthe
+```
+
+## Librairies
+
+```{r}
+#| message: false
+#| warning: false
+library(sf)
+library(mapsf)
+```
+
+## Chargement des données
+
+```{r}
+#| message: false
+#| warning: false
+
+iris     <- st_read("data/iris.gpkg",     quiet = TRUE)
+filosofi <- st_read("data/filosofi.gpkg", quiet = TRUE)
+communes <- st_read("data/communes.gpkg", quiet = TRUE)
+
+cat("IRIS     :", nrow(iris), "\n")
+cat("Carreaux :", nrow(filosofi), "\n")
+```
+
+## Jointure spatiale carreaux → IRIS
+
+```{r}
+#| message: false
+#| warning: false
+
+# Joindre chaque carreau à l'IRIS qui le contient
+# On garde seulement les colonnes utiles de iris
+join <- st_join(
+  filosofi[, c("ind_snv", "geom")],
+  iris[, c("code_iris", "nom_iris", "nom_commune", "geom")],
+  join = st_within
+)
+
+cat("Carreaux joints à un IRIS :", sum(!is.na(join$code_iris)), "\n")
+cat("Carreaux sans IRIS        :", sum(is.na(join$code_iris)), "\n")
+```
+
+## Agrégation du revenu médian par IRIS
+
+```{r}
+#| message: false
+#| warning: false
+
+df <- st_drop_geometry(join)
+df <- df[!is.na(df$code_iris) & !is.na(df$ind_snv), ]
+
+revenu_iris <- aggregate(
+  df$ind_snv,
+  by  = list(code_iris = df$code_iris),
+  FUN = median,
+  na.rm = TRUE
+)
+names(revenu_iris)[2] <- "revenu_median"
+
+# Fusionner avec les géométries IRIS
+iris_rev <- merge(iris, revenu_iris, by = "code_iris")
+
+cat("IRIS avec données de revenu :", nrow(iris_rev), "\n")
+summary(iris_rev$revenu_median)
+```
+
+## Carte des revenus médians par IRIS
+
+```{r}
+#| fig-width: 9
+#| fig-height: 7
+#| message: false
+#| warning: false
+
+mf_map(communes, col = "grey95", border = "grey50")
+mf_map(
+  iris_rev,
+  type      = "choro",
+  var       = "revenu_median",
+  nbreaks   = 5,
+  pal       = "RdYlGn",
+  border    = "white",
+  lwd       = 0.3,
+  leg_title = "Revenu médian\n(€/UC)",
+  add       = TRUE
+)
+mf_map(communes, col = NA, border = "black", lwd = 1.5, add = TRUE)
+mf_title("Revenu médian par IRIS — Aix-en-Provence et Marseille")
+mf_credits("Sources : INSEE Filosofi 2021 × IGN IRIS 2025")
+```
+
+## Comparaison par ville
+
+```{r}
+#| message: false
+#| warning: false
+
+iris_rev$ville <- iris_rev$nom_commune
+
+# Résumé statistique par ville
+tapply(iris_rev$revenu_median, iris_rev$ville, function(x) {
+  c(Minimum  = round(min(x, na.rm=TRUE)),
+    Médiane  = round(median(x, na.rm=TRUE)),
+    Moyenne  = round(mean(x, na.rm=TRUE)),
+    Maximum  = round(max(x, na.rm=TRUE)))
+})
+```
+
+## Conclusion
+
+La jointure spatiale confirme le contraste entre les deux villes : Aix-en-Provence présente des IRIS avec des revenus médians globalement plus élevés, tandis que Marseille montre une forte hétérogénéité, avec des IRIS très pauvres concentrés dans les quartiers nord et des IRIS aisés dans les arrondissements sud.

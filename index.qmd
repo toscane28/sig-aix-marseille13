@@ -1,0 +1,48 @@
+---
+title: "Inégalités centre-périphérie à Aix-en-Provence et Marseille"
+---
+
+## Introduction
+
+Ce projet analyse les inégalités de revenus entre le centre-ville et la périphérie
+de deux grandes villes méditerranéennes : **Aix-en-Provence** et **Marseille**.
+
+Ces deux villes constituent un cas d'étude particulièrement intéressant car elles
+présentent des profils socio-spatiaux supposément opposés : Aix-en-Provence est
+historiquement associée à une population aisée et un centre-ville riche, tandis que
+Marseille est marquée par une pauvreté concentrée dans certains quartiers centraux
+(notamment les quartiers nord) contrastant avec des périphéries résidentielles plus aisées.
+
+## Problématique
+
+**Dans quelle mesure les inégalités de revenus entre centre et périphérie
+diffèrent-elles entre Aix-en-Provence et Marseille ?**
+
+L'hypothèse est double :
+
+- À **Marseille**, le centre concentre la pauvreté tandis que la périphérie
+  résidentielle (sud, est) présente des revenus plus élevés.
+- À **Aix-en-Provence**, le schéma est inversé : le centre historique
+  est riche et les marges périphériques sont plus modestes.
+
+## Données utilisées
+
+| Donnée | Source | Millésime | Usage dans le projet |
+|---|---|---|---|
+| Contours IRIS (PE) | IGN / cartes.gouv.fr | 2025 | Maillage infra-communal |
+| Carreaux 200m Filosofi | INSEE | 2021 | Revenu médian par unité de consommation |
+| Admin Express COG Cartoplus | IGN / cartes.gouv.fr | 2025 | Limites communales (Lambert-93) |
+
+## Organisation du site
+
+- **GT Vecteur** : préparation des données, cartes de revenus par carreau, comparaison centre/périphérie
+- **GT Raster** : raster de distance au centre, relation distance-revenu
+- **Jointures** : agrégation des carreaux Filosofi à l'échelle des IRIS
+
+## Conclusion
+
+*(à compléter après les analyses)*
+
+Les résultats confirment-ils l'hypothèse d'une inversion du gradient centre-périphérie
+entre les deux villes ? Les cartes et analyses des pages suivantes apportent des éléments
+de réponse quantitatifs à cette question.
