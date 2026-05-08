@@ -159,13 +159,24 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
    
   <ul>
   <li><a href="#introduction" id="toc-introduction" class="nav-link active" data-scroll-target="#introduction">Introduction</a></li>
-  <li><a href="#schéma-de-géotraitement" id="toc-schéma-de-géotraitement" class="nav-link" data-scroll-target="#schéma-de-géotraitement">Schéma de géotraitement</a></li>
-  <li><a href="#librairies" id="toc-librairies" class="nav-link" data-scroll-target="#librairies">Librairies</a></li>
+  <li><a href="#schéma-de-géotraitement-centroïde-géométrique-raster-distance-extractioncommunes.gpkg" id="toc-schéma-de-géotraitement-centroïde-géométrique-raster-distance-extractioncommunes.gpkg" class="nav-link" data-scroll-target="#schéma-de-géotraitement-centroïde-géométrique-raster-distance-extractioncommunes.gpkg">Schéma de géotraitement┌──► Centroïde géométrique ──► raster distance ──► extractioncommunes.gpkg ──┤ │</a></li>
   <li><a href="#chargement-des-données" id="toc-chargement-des-données" class="nav-link" data-scroll-target="#chargement-des-données">Chargement des données</a></li>
-  <li><a href="#calcul-du-raster-de-distance-au-centre-de-marseille" id="toc-calcul-du-raster-de-distance-au-centre-de-marseille" class="nav-link" data-scroll-target="#calcul-du-raster-de-distance-au-centre-de-marseille">Calcul du raster de distance au centre de Marseille</a></li>
-  <li><a href="#extraction-de-la-distance-pour-chaque-carreau" id="toc-extraction-de-la-distance-pour-chaque-carreau" class="nav-link" data-scroll-target="#extraction-de-la-distance-pour-chaque-carreau">Extraction de la distance pour chaque carreau</a></li>
-  <li><a href="#relation-distance-revenu-médian" id="toc-relation-distance-revenu-médian" class="nav-link" data-scroll-target="#relation-distance-revenu-médian">Relation distance — revenu médian</a></li>
-  <li><a href="#carte-des-zones-de-distance" id="toc-carte-des-zones-de-distance" class="nav-link" data-scroll-target="#carte-des-zones-de-distance">Carte des zones de distance</a></li>
+  <li><a href="#définition-des-centres" id="toc-définition-des-centres" class="nav-link" data-scroll-target="#définition-des-centres">Définition des centres</a>
+  <ul class="collapse">
+  <li><a href="#centroïdes-géométriques" id="toc-centroïdes-géométriques" class="nav-link" data-scroll-target="#centroïdes-géométriques">Centroïdes géométriques</a></li>
+  <li><a href="#centres-historiques-coordonnées-vérifiables-sur-openstreetmap" id="toc-centres-historiques-coordonnées-vérifiables-sur-openstreetmap" class="nav-link" data-scroll-target="#centres-historiques-coordonnées-vérifiables-sur-openstreetmap">Centres historiques (coordonnées vérifiables sur OpenStreetMap)</a></li>
+  </ul></li>
+  <li><a href="#raster-de-distance-marseille-centroïde-géométrique" id="toc-raster-de-distance-marseille-centroïde-géométrique" class="nav-link" data-scroll-target="#raster-de-distance-marseille-centroïde-géométrique">Raster de distance — MARSEILLE (centroïde géométrique)</a></li>
+  <li><a href="#raster-de-distance-marseille-vieux-port" id="toc-raster-de-distance-marseille-vieux-port" class="nav-link" data-scroll-target="#raster-de-distance-marseille-vieux-port">Raster de distance — MARSEILLE (Vieux-Port)</a></li>
+  <li><a href="#raster-de-distance-aix-en-provence-centroïde-géométrique" id="toc-raster-de-distance-aix-en-provence-centroïde-géométrique" class="nav-link" data-scroll-target="#raster-de-distance-aix-en-provence-centroïde-géométrique">Raster de distance — AIX-EN-PROVENCE (centroïde géométrique)</a></li>
+  <li><a href="#raster-de-distance-aix-en-provence-place-de-la-rotonde" id="toc-raster-de-distance-aix-en-provence-place-de-la-rotonde" class="nav-link" data-scroll-target="#raster-de-distance-aix-en-provence-place-de-la-rotonde">Raster de distance — AIX-EN-PROVENCE (Place de la Rotonde)</a></li>
+  <li><a href="#extraction-des-distances-pour-chaque-carreau" id="toc-extraction-des-distances-pour-chaque-carreau" class="nav-link" data-scroll-target="#extraction-des-distances-pour-chaque-carreau">Extraction des distances pour chaque carreau</a></li>
+  <li><a href="#régressions-marseille" id="toc-régressions-marseille" class="nav-link" data-scroll-target="#régressions-marseille">Régressions — MARSEILLE</a></li>
+  <li><a href="#régressions-aix-en-provence" id="toc-régressions-aix-en-provence" class="nav-link" data-scroll-target="#régressions-aix-en-provence">Régressions — AIX-EN-PROVENCE</a></li>
+  <li><a href="#synthèse-comparative" id="toc-synthèse-comparative" class="nav-link" data-scroll-target="#synthèse-comparative">Synthèse comparative</a></li>
+  <li><a href="#interprétation" id="toc-interprétation" class="nav-link" data-scroll-target="#interprétation">Interprétation</a></li>
+  <li><a href="#carte-des-zones-de-distance-marseille-vieux-port" id="toc-carte-des-zones-de-distance-marseille-vieux-port" class="nav-link" data-scroll-target="#carte-des-zones-de-distance-marseille-vieux-port">Carte des zones de distance — Marseille (Vieux-Port)</a></li>
+  <li><a href="#carte-des-zones-de-distance-aix-en-provence-rotonde" id="toc-carte-des-zones-de-distance-aix-en-provence-rotonde" class="nav-link" data-scroll-target="#carte-des-zones-de-distance-aix-en-provence-rotonde">Carte des zones de distance — Aix-en-Provence (Rotonde)</a></li>
   </ul>
 </nav>
     </div>
@@ -193,114 +204,82 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 <section id="introduction" class="level2">
 <h2 class="anchored" data-anchor-id="introduction">Introduction</h2>
-<p>Cette page présente les géotraitements raster : création d’un raster de distance au centre-ville et analyse de la relation entre distance et revenu médian.</p>
+<p>Cette page présente les géotraitements raster appliqués à notre problématique. Pour tester quantitativement le <strong>gradient centre-périphérie</strong>, on construit pour chaque commune un raster de distance au centre, puis on étudie la corrélation entre cette distance et le niveau de vie moyen.</p>
+<p><strong>Une difficulté méthodologique apparaît rapidement</strong> : qu’est-ce que le “centre” d’une ville ? On compare ici deux approches :</p>
+<ol type="1">
+<li><strong>Centroïde géométrique</strong> de la commune (centre de gravité de la surface)</li>
+<li><strong>Centre historique réel</strong> (Vieux-Port pour Marseille, Place de la Rotonde pour Aix-en-Provence)</li>
+</ol>
+<p>Cette comparaison permet de distinguer les inégalités <strong>radiales</strong> (gradient régulier) des inégalités <strong>sectorielles</strong> (poches géographiques de richesse/pauvreté).</p>
 </section>
-<section id="schéma-de-géotraitement" class="level2">
-<h2 class="anchored" data-anchor-id="schéma-de-géotraitement">Schéma de géotraitement</h2>
-<pre><code>communes.gpkg  ──► Centroïde Marseille ──┐
-communes.gpkg  ──► Emprise raster (200m) ─┤──► Raster distance ──► dist_marseille
-                                          │
-filosofi.gpkg  ──► Extraction par carreau─┘──► distance par carreau
-                                              ──► Régression revenu ~ distance</code></pre>
-</section>
-<section id="librairies" class="level2">
-<h2 class="anchored" data-anchor-id="librairies">Librairies</h2>
+<section id="schéma-de-géotraitement-centroïde-géométrique-raster-distance-extractioncommunes.gpkg" class="level2">
+<h2 class="anchored" data-anchor-id="schéma-de-géotraitement-centroïde-géométrique-raster-distance-extractioncommunes.gpkg">Schéma de géotraitement┌──► Centroïde géométrique ──► raster distance ──► extractioncommunes.gpkg ──┤ │</h2>
+<p>└──► Centre historique ────► raster distance ──► extraction │ filosofi.gpkg ──────────────────────────────────────────────────────────┤ │ ▼ régression niveau_vie ~ distance (par ville × par type de centre) ## Librairies</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(sf)</span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(terra)</span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(mapsf)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(sf)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(terra)</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(mapsf)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </section>
 <section id="chargement-des-données" class="level2">
 <h2 class="anchored" data-anchor-id="chargement-des-données">Chargement des données</h2>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>communes <span class="ot">&lt;-</span> <span class="fu">st_read</span>(<span class="st">"data/communes.gpkg"</span>, <span class="at">quiet =</span> <span class="cn">TRUE</span>)</span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>filosofi <span class="ot">&lt;-</span> <span class="fu">st_read</span>(<span class="st">"data/filosofi.gpkg"</span>, <span class="at">quiet =</span> <span class="cn">TRUE</span>)</span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">"Communes :"</span>, <span class="fu">nrow</span>(communes), <span class="st">"</span><span class="sc">\n</span><span class="st">"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>communes <span class="ot">&lt;-</span> <span class="fu">st_read</span>(<span class="st">"data/communes.gpkg"</span>, <span class="at">quiet =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>filosofi <span class="ot">&lt;-</span> <span class="fu">st_read</span>(<span class="st">"data/filosofi.gpkg"</span>, <span class="at">quiet =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">"Communes :"</span>, <span class="fu">nrow</span>(communes), <span class="st">"</span><span class="sc">\n</span><span class="st">"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Communes : 2 </code></pre>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">"Carreaux :"</span>, <span class="fu">nrow</span>(filosofi), <span class="st">"</span><span class="sc">\n</span><span class="st">"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">"Carreaux :"</span>, <span class="fu">nrow</span>(filosofi), <span class="st">"</span><span class="sc">\n</span><span class="st">"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Carreaux : 5681 </code></pre>
 </div>
 </div>
 </section>
-<section id="calcul-du-raster-de-distance-au-centre-de-marseille" class="level2">
-<h2 class="anchored" data-anchor-id="calcul-du-raster-de-distance-au-centre-de-marseille">Calcul du raster de distance au centre de Marseille</h2>
+<section id="définition-des-centres" class="level2">
+<h2 class="anchored" data-anchor-id="définition-des-centres">Définition des centres</h2>
+<section id="centroïdes-géométriques" class="level3">
+<h3 class="anchored" data-anchor-id="centroïdes-géométriques">Centroïdes géométriques</h3>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Centroïde de Marseille</span></span>
-<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>marseille   <span class="ot">&lt;-</span> communes[communes<span class="sc">$</span>nom_officiel <span class="sc">==</span> <span class="st">"Marseille"</span>, ]</span>
-<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>centre_m    <span class="ot">&lt;-</span> <span class="fu">st_centroid</span>(marseille)</span>
-<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Raster sur l'emprise des deux communes, résolution 200m (= carreaux Filosofi)</span></span>
-<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>r_base  <span class="ot">&lt;-</span> <span class="fu">rast</span>(<span class="fu">vect</span>(communes), <span class="at">res =</span> <span class="dv">200</span>)</span>
-<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Calcul de la distance au centroïde (en mètres)</span></span>
-<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>dist_r  <span class="ot">&lt;-</span> <span class="fu">distance</span>(r_base, <span class="fu">vect</span>(centre_m))</span>
-<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(dist_r) <span class="ot">&lt;-</span> <span class="st">"distance_m"</span></span>
-<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a><span class="co"># Affichage</span></span>
-<span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(dist_r, <span class="at">main =</span> <span class="st">"Distance au centre de Marseille (m)"</span>,</span>
-<span id="cb7-14"><a href="#cb7-14" aria-hidden="true" tabindex="-1"></a>     <span class="at">col =</span> <span class="fu">rev</span>(<span class="fu">hcl.colors</span>(<span class="dv">50</span>, <span class="st">"Spectral"</span>)))</span>
-<span id="cb7-15"><a href="#cb7-15" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(<span class="fu">st_geometry</span>(communes), <span class="at">add =</span> <span class="cn">TRUE</span>, <span class="at">border =</span> <span class="st">"white"</span>, <span class="at">lwd =</span> <span class="fl">1.5</span>)</span>
-<span id="cb7-16"><a href="#cb7-16" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(<span class="fu">st_geometry</span>(centre_m), <span class="at">add =</span> <span class="cn">TRUE</span>, <span class="at">pch =</span> <span class="dv">4</span>, <span class="at">cex =</span> <span class="dv">2</span>, <span class="at">col =</span> <span class="st">"red"</span>, <span class="at">lwd =</span> <span class="dv">2</span>)</span>
-<span id="cb7-17"><a href="#cb7-17" aria-hidden="true" tabindex="-1"></a><span class="fu">legend</span>(<span class="st">"bottomright"</span>, <span class="at">legend =</span> <span class="st">"Centre Marseille"</span>, <span class="at">pch =</span> <span class="dv">4</span>, <span class="at">col =</span> <span class="st">"red"</span>, <span class="at">bty =</span> <span class="st">"n"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="raster_files/figure-html/unnamed-chunk-3-1.png" class="img-fluid figure-img" width="864"></p>
-</figure>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>marseille <span class="ot">&lt;-</span> communes[communes<span class="sc">$</span>nom_officiel <span class="sc">==</span> <span class="st">"Marseille"</span>, ]</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>aix       <span class="ot">&lt;-</span> communes[communes<span class="sc">$</span>nom_officiel <span class="sc">==</span> <span class="st">"Aix-en-Provence"</span>, ]</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>centroide_m <span class="ot">&lt;-</span> <span class="fu">st_centroid</span>(marseille)</span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>centroide_a <span class="ot">&lt;-</span> <span class="fu">st_centroid</span>(aix)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
+</section>
+<section id="centres-historiques-coordonnées-vérifiables-sur-openstreetmap" class="level3">
+<h3 class="anchored" data-anchor-id="centres-historiques-coordonnées-vérifiables-sur-openstreetmap">Centres historiques (coordonnées vérifiables sur OpenStreetMap)</h3>
+<ul>
+<li><strong>Marseille — Vieux-Port</strong> : 5,3698° E / 43,2961° N</li>
+<li><strong>Aix-en-Provence — Place de la Rotonde</strong> : 5,4474° E / 43,5263° N</li>
+</ul>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Création des points en WGS84 puis reprojection en Lambert-93 (EPSG:2154)</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>centre_hist_m <span class="ot">&lt;-</span> <span class="fu">st_sfc</span>(<span class="fu">st_point</span>(<span class="fu">c</span>(<span class="fl">5.3698</span>, <span class="fl">43.2961</span>)), <span class="at">crs =</span> <span class="dv">4326</span>) <span class="sc">|&gt;</span></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">st_transform</span>(<span class="dv">2154</span>)</span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>centre_hist_a <span class="ot">&lt;-</span> <span class="fu">st_sfc</span>(<span class="fu">st_point</span>(<span class="fu">c</span>(<span class="fl">5.4474</span>, <span class="fl">43.5263</span>)), <span class="at">crs =</span> <span class="dv">4326</span>) <span class="sc">|&gt;</span></span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">st_transform</span>(<span class="dv">2154</span>)</span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">"Centres historiques projetés en Lambert-93 ✓</span><span class="sc">\n</span><span class="st">"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Centres historiques projetés en Lambert-93 ✓</code></pre>
 </div>
 </div>
 </section>
-<section id="extraction-de-la-distance-pour-chaque-carreau" class="level2">
-<h2 class="anchored" data-anchor-id="extraction-de-la-distance-pour-chaque-carreau">Extraction de la distance pour chaque carreau</h2>
-<div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Centroïdes des carreaux</span></span>
-<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>filosofi_v      <span class="ot">&lt;-</span> <span class="fu">vect</span>(filosofi)</span>
-<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>filosofi<span class="sc">$</span>dist_m <span class="ot">&lt;-</span> <span class="fu">extract</span>(dist_r, filosofi_v, <span class="at">fun =</span> mean, <span class="at">na.rm =</span> <span class="cn">TRUE</span>, <span class="at">ID =</span> <span class="cn">FALSE</span>)[, <span class="dv">1</span>]</span>
-<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">"Distance min :"</span>, <span class="fu">round</span>(<span class="fu">min</span>(filosofi<span class="sc">$</span>dist_m, <span class="at">na.rm =</span> <span class="cn">TRUE</span>) <span class="sc">/</span> <span class="dv">1000</span>, <span class="dv">1</span>), <span class="st">"km</span><span class="sc">\n</span><span class="st">"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>Distance min : 0.1 km</code></pre>
-</div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">"Distance max :"</span>, <span class="fu">round</span>(<span class="fu">max</span>(filosofi<span class="sc">$</span>dist_m, <span class="at">na.rm =</span> <span class="cn">TRUE</span>) <span class="sc">/</span> <span class="dv">1000</span>, <span class="dv">1</span>), <span class="st">"km</span><span class="sc">\n</span><span class="st">"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>Distance max : 36.6 km</code></pre>
-</div>
-</div>
 </section>
-<section id="relation-distance-revenu-médian" class="level2">
-<h2 class="anchored" data-anchor-id="relation-distance-revenu-médian">Relation distance — revenu médian</h2>
+<section id="raster-de-distance-marseille-centroïde-géométrique" class="level2">
+<h2 class="anchored" data-anchor-id="raster-de-distance-marseille-centroïde-géométrique">Raster de distance — MARSEILLE (centroïde géométrique)</h2>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Retirer les valeurs manquantes</span></span>
-<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>df <span class="ot">&lt;-</span> <span class="fu">st_drop_geometry</span>(filosofi)</span>
-<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>df <span class="ot">&lt;-</span> df[<span class="sc">!</span><span class="fu">is.na</span>(df<span class="sc">$</span>dist_m) <span class="sc">&amp;</span> <span class="sc">!</span><span class="fu">is.na</span>(df<span class="sc">$</span>ind_snv), ]</span>
-<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Nuage de points</span></span>
-<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(</span>
-<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a>  df<span class="sc">$</span>dist_m <span class="sc">/</span> <span class="dv">1000</span>,</span>
-<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a>  df<span class="sc">$</span>ind_snv,</span>
-<span id="cb12-9"><a href="#cb12-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">xlab =</span> <span class="st">"Distance au centre de Marseille (km)"</span>,</span>
-<span id="cb12-10"><a href="#cb12-10" aria-hidden="true" tabindex="-1"></a>  <span class="at">ylab =</span> <span class="st">"Revenu médian (€/UC)"</span>,</span>
-<span id="cb12-11"><a href="#cb12-11" aria-hidden="true" tabindex="-1"></a>  <span class="at">main =</span> <span class="st">"Revenu médian vs distance au centre"</span>,</span>
-<span id="cb12-12"><a href="#cb12-12" aria-hidden="true" tabindex="-1"></a>  <span class="at">pch  =</span> <span class="dv">20</span>,</span>
-<span id="cb12-13"><a href="#cb12-13" aria-hidden="true" tabindex="-1"></a>  <span class="at">col  =</span> <span class="fu">rgb</span>(<span class="fl">0.2</span>, <span class="fl">0.4</span>, <span class="fl">0.8</span>, <span class="fl">0.2</span>),</span>
-<span id="cb12-14"><a href="#cb12-14" aria-hidden="true" tabindex="-1"></a>  <span class="at">cex  =</span> <span class="fl">0.5</span></span>
-<span id="cb12-15"><a href="#cb12-15" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb12-16"><a href="#cb12-16" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-17"><a href="#cb12-17" aria-hidden="true" tabindex="-1"></a><span class="co"># Droite de régression</span></span>
-<span id="cb12-18"><a href="#cb12-18" aria-hidden="true" tabindex="-1"></a>mod <span class="ot">&lt;-</span> <span class="fu">lm</span>(ind_snv <span class="sc">~</span> dist_m, <span class="at">data =</span> df)</span>
-<span id="cb12-19"><a href="#cb12-19" aria-hidden="true" tabindex="-1"></a><span class="fu">abline</span>(mod, <span class="at">col =</span> <span class="st">"red"</span>, <span class="at">lwd =</span> <span class="dv">2</span>)</span>
-<span id="cb12-20"><a href="#cb12-20" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-21"><a href="#cb12-21" aria-hidden="true" tabindex="-1"></a>r2 <span class="ot">&lt;-</span> <span class="fu">round</span>(<span class="fu">summary</span>(mod)<span class="sc">$</span>r.squared, <span class="dv">3</span>)</span>
-<span id="cb12-22"><a href="#cb12-22" aria-hidden="true" tabindex="-1"></a><span class="fu">legend</span>(<span class="st">"topright"</span>,</span>
-<span id="cb12-23"><a href="#cb12-23" aria-hidden="true" tabindex="-1"></a>       <span class="at">legend =</span> <span class="fu">paste0</span>(<span class="st">"R² = "</span>, r2, <span class="st">"</span><span class="sc">\n</span><span class="st">pente = "</span>,</span>
-<span id="cb12-24"><a href="#cb12-24" aria-hidden="true" tabindex="-1"></a>                       <span class="fu">round</span>(<span class="fu">coef</span>(mod)[<span class="dv">2</span>] <span class="sc">*</span> <span class="dv">1000</span>, <span class="dv">1</span>), <span class="st">" €/km"</span>),</span>
-<span id="cb12-25"><a href="#cb12-25" aria-hidden="true" tabindex="-1"></a>       <span class="at">bty =</span> <span class="st">"n"</span>, <span class="at">col =</span> <span class="st">"red"</span>, <span class="at">lty =</span> <span class="dv">1</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>r_base_m <span class="ot">&lt;-</span> <span class="fu">rast</span>(<span class="fu">vect</span>(marseille), <span class="at">res =</span> <span class="dv">200</span>)</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>dist_centroide_m <span class="ot">&lt;-</span> <span class="fu">distance</span>(r_base_m, <span class="fu">vect</span>(centroide_m))</span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(dist_centroide_m, <span class="at">main =</span> <span class="st">"Distance au centroïde géométrique de Marseille (m)"</span>,</span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>     <span class="at">col =</span> <span class="fu">rev</span>(<span class="fu">hcl.colors</span>(<span class="dv">50</span>, <span class="st">"Spectral"</span>)))</span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(<span class="fu">st_geometry</span>(marseille), <span class="at">add =</span> <span class="cn">TRUE</span>, <span class="at">border =</span> <span class="st">"white"</span>, <span class="at">lwd =</span> <span class="fl">1.5</span>)</span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(<span class="fu">st_geometry</span>(centroide_m), <span class="at">add =</span> <span class="cn">TRUE</span>, <span class="at">pch =</span> <span class="dv">4</span>, <span class="at">cex =</span> <span class="dv">2</span>, <span class="at">col =</span> <span class="st">"red"</span>, <span class="at">lwd =</span> <span class="dv">2</span>)</span>
+<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a><span class="fu">legend</span>(<span class="st">"bottomright"</span>, <span class="at">legend =</span> <span class="st">"Centroïde géométrique"</span>, <span class="at">pch =</span> <span class="dv">4</span>, <span class="at">col =</span> <span class="st">"red"</span>, <span class="at">bty =</span> <span class="st">"n"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -310,35 +289,249 @@ filosofi.gpkg  ──► Extraction par carreau─┘──► distance par carr
 </div>
 </div>
 </section>
-<section id="carte-des-zones-de-distance" class="level2">
-<h2 class="anchored" data-anchor-id="carte-des-zones-de-distance">Carte des zones de distance</h2>
+<section id="raster-de-distance-marseille-vieux-port" class="level2">
+<h2 class="anchored" data-anchor-id="raster-de-distance-marseille-vieux-port">Raster de distance — MARSEILLE (Vieux-Port)</h2>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>filosofi<span class="sc">$</span>zone_dist <span class="ot">&lt;-</span> <span class="fu">cut</span>(</span>
-<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>  filosofi<span class="sc">$</span>dist_m,</span>
-<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">breaks =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">2000</span>, <span class="dv">5000</span>, <span class="dv">10000</span>, <span class="cn">Inf</span>),</span>
-<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">labels =</span> <span class="fu">c</span>(<span class="st">"0-2 km (hyper-centre)"</span>,</span>
-<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a>             <span class="st">"2-5 km (centre élargi)"</span>,</span>
-<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a>             <span class="st">"5-10 km (péri-urbain proche)"</span>,</span>
-<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a>             <span class="st">"&gt; 10 km (périphérie)"</span>)</span>
-<span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb13-9"><a href="#cb13-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb13-10"><a href="#cb13-10" aria-hidden="true" tabindex="-1"></a><span class="fu">mf_map</span>(communes, <span class="at">col =</span> <span class="st">"grey95"</span>, <span class="at">border =</span> <span class="st">"grey50"</span>)</span>
-<span id="cb13-11"><a href="#cb13-11" aria-hidden="true" tabindex="-1"></a><span class="fu">mf_map</span>(</span>
-<span id="cb13-12"><a href="#cb13-12" aria-hidden="true" tabindex="-1"></a>  filosofi,</span>
-<span id="cb13-13"><a href="#cb13-13" aria-hidden="true" tabindex="-1"></a>  <span class="at">type      =</span> <span class="st">"typo"</span>,</span>
-<span id="cb13-14"><a href="#cb13-14" aria-hidden="true" tabindex="-1"></a>  <span class="at">var       =</span> <span class="st">"zone_dist"</span>,</span>
-<span id="cb13-15"><a href="#cb13-15" aria-hidden="true" tabindex="-1"></a>  <span class="at">pal       =</span> <span class="fu">c</span>(<span class="st">"#d73027"</span>, <span class="st">"#fc8d59"</span>, <span class="st">"#fee090"</span>, <span class="st">"#91bfdb"</span>),</span>
-<span id="cb13-16"><a href="#cb13-16" aria-hidden="true" tabindex="-1"></a>  <span class="at">border    =</span> <span class="cn">NA</span>,</span>
-<span id="cb13-17"><a href="#cb13-17" aria-hidden="true" tabindex="-1"></a>  <span class="at">leg_title =</span> <span class="st">"Zone de distance"</span>,</span>
-<span id="cb13-18"><a href="#cb13-18" aria-hidden="true" tabindex="-1"></a>  <span class="at">add       =</span> <span class="cn">TRUE</span></span>
-<span id="cb13-19"><a href="#cb13-19" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb13-20"><a href="#cb13-20" aria-hidden="true" tabindex="-1"></a><span class="fu">mf_map</span>(communes, <span class="at">col =</span> <span class="cn">NA</span>, <span class="at">border =</span> <span class="st">"black"</span>, <span class="at">lwd =</span> <span class="fl">1.5</span>, <span class="at">add =</span> <span class="cn">TRUE</span>)</span>
-<span id="cb13-21"><a href="#cb13-21" aria-hidden="true" tabindex="-1"></a><span class="fu">mf_title</span>(<span class="st">"Zonage de distance au centre — Marseille"</span>)</span>
-<span id="cb13-22"><a href="#cb13-22" aria-hidden="true" tabindex="-1"></a><span class="fu">mf_credits</span>(<span class="st">"Sources : INSEE Filosofi 2021 | IGN Admin Express 2025 | terra"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>dist_hist_m <span class="ot">&lt;-</span> <span class="fu">distance</span>(r_base_m, <span class="fu">vect</span>(centre_hist_m))</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(dist_hist_m, <span class="at">main =</span> <span class="st">"Distance au Vieux-Port de Marseille (m)"</span>,</span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>     <span class="at">col =</span> <span class="fu">rev</span>(<span class="fu">hcl.colors</span>(<span class="dv">50</span>, <span class="st">"Spectral"</span>)))</span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(<span class="fu">st_geometry</span>(marseille), <span class="at">add =</span> <span class="cn">TRUE</span>, <span class="at">border =</span> <span class="st">"white"</span>, <span class="at">lwd =</span> <span class="fl">1.5</span>)</span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(<span class="fu">st_geometry</span>(centre_hist_m), <span class="at">add =</span> <span class="cn">TRUE</span>, <span class="at">pch =</span> <span class="dv">4</span>, <span class="at">cex =</span> <span class="dv">2</span>, <span class="at">col =</span> <span class="st">"darkblue"</span>, <span class="at">lwd =</span> <span class="dv">2</span>)</span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a><span class="fu">legend</span>(<span class="st">"bottomright"</span>, <span class="at">legend =</span> <span class="st">"Vieux-Port (centre historique)"</span>, <span class="at">pch =</span> <span class="dv">4</span>, <span class="at">col =</span> <span class="st">"darkblue"</span>, <span class="at">bty =</span> <span class="st">"n"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
 <p><img src="raster_files/figure-html/unnamed-chunk-6-1.png" class="img-fluid figure-img" width="864"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="raster-de-distance-aix-en-provence-centroïde-géométrique" class="level2">
+<h2 class="anchored" data-anchor-id="raster-de-distance-aix-en-provence-centroïde-géométrique">Raster de distance — AIX-EN-PROVENCE (centroïde géométrique)</h2>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>r_base_a <span class="ot">&lt;-</span> <span class="fu">rast</span>(<span class="fu">vect</span>(aix), <span class="at">res =</span> <span class="dv">200</span>)</span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>dist_centroide_a <span class="ot">&lt;-</span> <span class="fu">distance</span>(r_base_a, <span class="fu">vect</span>(centroide_a))</span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(dist_centroide_a, <span class="at">main =</span> <span class="st">"Distance au centroïde géométrique d'Aix (m)"</span>,</span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>     <span class="at">col =</span> <span class="fu">rev</span>(<span class="fu">hcl.colors</span>(<span class="dv">50</span>, <span class="st">"Spectral"</span>)))</span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(<span class="fu">st_geometry</span>(aix), <span class="at">add =</span> <span class="cn">TRUE</span>, <span class="at">border =</span> <span class="st">"white"</span>, <span class="at">lwd =</span> <span class="fl">1.5</span>)</span>
+<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(<span class="fu">st_geometry</span>(centroide_a), <span class="at">add =</span> <span class="cn">TRUE</span>, <span class="at">pch =</span> <span class="dv">4</span>, <span class="at">cex =</span> <span class="dv">2</span>, <span class="at">col =</span> <span class="st">"red"</span>, <span class="at">lwd =</span> <span class="dv">2</span>)</span>
+<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a><span class="fu">legend</span>(<span class="st">"bottomright"</span>, <span class="at">legend =</span> <span class="st">"Centroïde géométrique"</span>, <span class="at">pch =</span> <span class="dv">4</span>, <span class="at">col =</span> <span class="st">"red"</span>, <span class="at">bty =</span> <span class="st">"n"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="raster_files/figure-html/unnamed-chunk-7-1.png" class="img-fluid figure-img" width="864"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="raster-de-distance-aix-en-provence-place-de-la-rotonde" class="level2">
+<h2 class="anchored" data-anchor-id="raster-de-distance-aix-en-provence-place-de-la-rotonde">Raster de distance — AIX-EN-PROVENCE (Place de la Rotonde)</h2>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>dist_hist_a <span class="ot">&lt;-</span> <span class="fu">distance</span>(r_base_a, <span class="fu">vect</span>(centre_hist_a))</span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(dist_hist_a, <span class="at">main =</span> <span class="st">"Distance à la Place de la Rotonde (m)"</span>,</span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>     <span class="at">col =</span> <span class="fu">rev</span>(<span class="fu">hcl.colors</span>(<span class="dv">50</span>, <span class="st">"Spectral"</span>)))</span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(<span class="fu">st_geometry</span>(aix), <span class="at">add =</span> <span class="cn">TRUE</span>, <span class="at">border =</span> <span class="st">"white"</span>, <span class="at">lwd =</span> <span class="fl">1.5</span>)</span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(<span class="fu">st_geometry</span>(centre_hist_a), <span class="at">add =</span> <span class="cn">TRUE</span>, <span class="at">pch =</span> <span class="dv">4</span>, <span class="at">cex =</span> <span class="dv">2</span>, <span class="at">col =</span> <span class="st">"darkblue"</span>, <span class="at">lwd =</span> <span class="dv">2</span>)</span>
+<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a><span class="fu">legend</span>(<span class="st">"bottomright"</span>, <span class="at">legend =</span> <span class="st">"Place de la Rotonde (centre historique)"</span>, <span class="at">pch =</span> <span class="dv">4</span>, <span class="at">col =</span> <span class="st">"darkblue"</span>, <span class="at">bty =</span> <span class="st">"n"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="raster_files/figure-html/unnamed-chunk-8-1.png" class="img-fluid figure-img" width="864"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="extraction-des-distances-pour-chaque-carreau" class="level2">
+<h2 class="anchored" data-anchor-id="extraction-des-distances-pour-chaque-carreau">Extraction des distances pour chaque carreau</h2>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Carreaux Marseille</span></span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>filo_m <span class="ot">&lt;-</span> filosofi[<span class="sc">!</span><span class="fu">is.na</span>(filosofi<span class="sc">$</span>ville) <span class="sc">&amp;</span> filosofi<span class="sc">$</span>ville <span class="sc">==</span> <span class="st">"Marseille"</span>, ]</span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>filo_m<span class="sc">$</span>dist_centroide  <span class="ot">&lt;-</span> <span class="fu">extract</span>(dist_centroide_m, <span class="fu">vect</span>(filo_m), <span class="at">fun =</span> mean, <span class="at">na.rm =</span> <span class="cn">TRUE</span>, <span class="at">ID =</span> <span class="cn">FALSE</span>)[, <span class="dv">1</span>]</span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>filo_m<span class="sc">$</span>dist_historique <span class="ot">&lt;-</span> <span class="fu">extract</span>(dist_hist_m,      <span class="fu">vect</span>(filo_m), <span class="at">fun =</span> mean, <span class="at">na.rm =</span> <span class="cn">TRUE</span>, <span class="at">ID =</span> <span class="cn">FALSE</span>)[, <span class="dv">1</span>]</span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Carreaux Aix</span></span>
+<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a>filo_a <span class="ot">&lt;-</span> filosofi[<span class="sc">!</span><span class="fu">is.na</span>(filosofi<span class="sc">$</span>ville) <span class="sc">&amp;</span> filosofi<span class="sc">$</span>ville <span class="sc">==</span> <span class="st">"Aix-en-Provence"</span>, ]</span>
+<span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a>filo_a<span class="sc">$</span>dist_centroide  <span class="ot">&lt;-</span> <span class="fu">extract</span>(dist_centroide_a, <span class="fu">vect</span>(filo_a), <span class="at">fun =</span> mean, <span class="at">na.rm =</span> <span class="cn">TRUE</span>, <span class="at">ID =</span> <span class="cn">FALSE</span>)[, <span class="dv">1</span>]</span>
+<span id="cb13-9"><a href="#cb13-9" aria-hidden="true" tabindex="-1"></a>filo_a<span class="sc">$</span>dist_historique <span class="ot">&lt;-</span> <span class="fu">extract</span>(dist_hist_a,      <span class="fu">vect</span>(filo_a), <span class="at">fun =</span> mean, <span class="at">na.rm =</span> <span class="cn">TRUE</span>, <span class="at">ID =</span> <span class="cn">FALSE</span>)[, <span class="dv">1</span>]</span>
+<span id="cb13-10"><a href="#cb13-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-11"><a href="#cb13-11" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">"Marseille — distance max au Vieux-Port :"</span>, <span class="fu">round</span>(<span class="fu">max</span>(filo_m<span class="sc">$</span>dist_historique, <span class="at">na.rm=</span><span class="cn">TRUE</span>)<span class="sc">/</span><span class="dv">1000</span>, <span class="dv">1</span>), <span class="st">"km</span><span class="sc">\n</span><span class="st">"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Marseille — distance max au Vieux-Port : 12.9 km</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">"Aix       — distance max à la Rotonde  :"</span>, <span class="fu">round</span>(<span class="fu">max</span>(filo_a<span class="sc">$</span>dist_historique, <span class="at">na.rm=</span><span class="cn">TRUE</span>)<span class="sc">/</span><span class="dv">1000</span>, <span class="dv">1</span>), <span class="st">"km</span><span class="sc">\n</span><span class="st">"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Aix       — distance max à la Rotonde  : 13.4 km</code></pre>
+</div>
+</div>
+</section>
+<section id="régressions-marseille" class="level2">
+<h2 class="anchored" data-anchor-id="régressions-marseille">Régressions — MARSEILLE</h2>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>df_m <span class="ot">&lt;-</span> <span class="fu">st_drop_geometry</span>(filo_m)</span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>df_m <span class="ot">&lt;-</span> df_m[<span class="sc">!</span><span class="fu">is.na</span>(df_m<span class="sc">$</span>dist_historique) <span class="sc">&amp;</span> <span class="sc">!</span><span class="fu">is.na</span>(df_m<span class="sc">$</span>niveau_vie), ]</span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>))</span>
+<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Centroïde</span></span>
+<span id="cb17-7"><a href="#cb17-7" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(df_m<span class="sc">$</span>dist_centroide <span class="sc">/</span> <span class="dv">1000</span>, df_m<span class="sc">$</span>niveau_vie,</span>
+<span id="cb17-8"><a href="#cb17-8" aria-hidden="true" tabindex="-1"></a>     <span class="at">xlab =</span> <span class="st">"Distance au centroïde (km)"</span>, <span class="at">ylab =</span> <span class="st">"Niveau de vie (€/an/UC)"</span>,</span>
+<span id="cb17-9"><a href="#cb17-9" aria-hidden="true" tabindex="-1"></a>     <span class="at">main =</span> <span class="st">"Marseille — centroïde géométrique"</span>,</span>
+<span id="cb17-10"><a href="#cb17-10" aria-hidden="true" tabindex="-1"></a>     <span class="at">pch =</span> <span class="dv">20</span>, <span class="at">col =</span> <span class="fu">rgb</span>(<span class="fl">0.7</span>, <span class="fl">0.1</span>, <span class="fl">0.1</span>, <span class="fl">0.2</span>), <span class="at">cex =</span> <span class="fl">0.5</span>)</span>
+<span id="cb17-11"><a href="#cb17-11" aria-hidden="true" tabindex="-1"></a>mod_m_c <span class="ot">&lt;-</span> <span class="fu">lm</span>(niveau_vie <span class="sc">~</span> dist_centroide, <span class="at">data =</span> df_m)</span>
+<span id="cb17-12"><a href="#cb17-12" aria-hidden="true" tabindex="-1"></a><span class="fu">abline</span>(mod_m_c, <span class="at">col =</span> <span class="st">"red"</span>, <span class="at">lwd =</span> <span class="dv">2</span>)</span>
+<span id="cb17-13"><a href="#cb17-13" aria-hidden="true" tabindex="-1"></a>r2_mc <span class="ot">&lt;-</span> <span class="fu">round</span>(<span class="fu">summary</span>(mod_m_c)<span class="sc">$</span>r.squared, <span class="dv">3</span>)</span>
+<span id="cb17-14"><a href="#cb17-14" aria-hidden="true" tabindex="-1"></a>pente_mc <span class="ot">&lt;-</span> <span class="fu">round</span>(<span class="fu">coef</span>(mod_m_c)[<span class="dv">2</span>] <span class="sc">*</span> <span class="dv">1000</span>, <span class="dv">1</span>)</span>
+<span id="cb17-15"><a href="#cb17-15" aria-hidden="true" tabindex="-1"></a><span class="fu">legend</span>(<span class="st">"topright"</span>, <span class="at">legend =</span> <span class="fu">paste0</span>(<span class="st">"R² = "</span>, r2_mc, <span class="st">"</span><span class="sc">\n</span><span class="st">pente = "</span>, pente_mc, <span class="st">" €/km"</span>),</span>
+<span id="cb17-16"><a href="#cb17-16" aria-hidden="true" tabindex="-1"></a>       <span class="at">bty =</span> <span class="st">"n"</span>, <span class="at">text.col =</span> <span class="st">"red"</span>)</span>
+<span id="cb17-17"><a href="#cb17-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-18"><a href="#cb17-18" aria-hidden="true" tabindex="-1"></a><span class="co"># Vieux-Port</span></span>
+<span id="cb17-19"><a href="#cb17-19" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(df_m<span class="sc">$</span>dist_historique <span class="sc">/</span> <span class="dv">1000</span>, df_m<span class="sc">$</span>niveau_vie,</span>
+<span id="cb17-20"><a href="#cb17-20" aria-hidden="true" tabindex="-1"></a>     <span class="at">xlab =</span> <span class="st">"Distance au Vieux-Port (km)"</span>, <span class="at">ylab =</span> <span class="st">"Niveau de vie (€/an/UC)"</span>,</span>
+<span id="cb17-21"><a href="#cb17-21" aria-hidden="true" tabindex="-1"></a>     <span class="at">main =</span> <span class="st">"Marseille — Vieux-Port"</span>,</span>
+<span id="cb17-22"><a href="#cb17-22" aria-hidden="true" tabindex="-1"></a>     <span class="at">pch =</span> <span class="dv">20</span>, <span class="at">col =</span> <span class="fu">rgb</span>(<span class="fl">0.1</span>, <span class="fl">0.1</span>, <span class="fl">0.7</span>, <span class="fl">0.2</span>), <span class="at">cex =</span> <span class="fl">0.5</span>)</span>
+<span id="cb17-23"><a href="#cb17-23" aria-hidden="true" tabindex="-1"></a>mod_m_h <span class="ot">&lt;-</span> <span class="fu">lm</span>(niveau_vie <span class="sc">~</span> dist_historique, <span class="at">data =</span> df_m)</span>
+<span id="cb17-24"><a href="#cb17-24" aria-hidden="true" tabindex="-1"></a><span class="fu">abline</span>(mod_m_h, <span class="at">col =</span> <span class="st">"darkblue"</span>, <span class="at">lwd =</span> <span class="dv">2</span>)</span>
+<span id="cb17-25"><a href="#cb17-25" aria-hidden="true" tabindex="-1"></a>r2_mh <span class="ot">&lt;-</span> <span class="fu">round</span>(<span class="fu">summary</span>(mod_m_h)<span class="sc">$</span>r.squared, <span class="dv">3</span>)</span>
+<span id="cb17-26"><a href="#cb17-26" aria-hidden="true" tabindex="-1"></a>pente_mh <span class="ot">&lt;-</span> <span class="fu">round</span>(<span class="fu">coef</span>(mod_m_h)[<span class="dv">2</span>] <span class="sc">*</span> <span class="dv">1000</span>, <span class="dv">1</span>)</span>
+<span id="cb17-27"><a href="#cb17-27" aria-hidden="true" tabindex="-1"></a><span class="fu">legend</span>(<span class="st">"topright"</span>, <span class="at">legend =</span> <span class="fu">paste0</span>(<span class="st">"R² = "</span>, r2_mh, <span class="st">"</span><span class="sc">\n</span><span class="st">pente = "</span>, pente_mh, <span class="st">" €/km"</span>),</span>
+<span id="cb17-28"><a href="#cb17-28" aria-hidden="true" tabindex="-1"></a>       <span class="at">bty =</span> <span class="st">"n"</span>, <span class="at">text.col =</span> <span class="st">"darkblue"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="raster_files/figure-html/unnamed-chunk-10-1.png" class="img-fluid figure-img" width="1056"></p>
+</figure>
+</div>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">1</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</section>
+<section id="régressions-aix-en-provence" class="level2">
+<h2 class="anchored" data-anchor-id="régressions-aix-en-provence">Régressions — AIX-EN-PROVENCE</h2>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>df_a <span class="ot">&lt;-</span> <span class="fu">st_drop_geometry</span>(filo_a)</span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>df_a <span class="ot">&lt;-</span> df_a[<span class="sc">!</span><span class="fu">is.na</span>(df_a<span class="sc">$</span>dist_historique) <span class="sc">&amp;</span> <span class="sc">!</span><span class="fu">is.na</span>(df_a<span class="sc">$</span>niveau_vie), ]</span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>))</span>
+<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-6"><a href="#cb19-6" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(df_a<span class="sc">$</span>dist_centroide <span class="sc">/</span> <span class="dv">1000</span>, df_a<span class="sc">$</span>niveau_vie,</span>
+<span id="cb19-7"><a href="#cb19-7" aria-hidden="true" tabindex="-1"></a>     <span class="at">xlab =</span> <span class="st">"Distance au centroïde (km)"</span>, <span class="at">ylab =</span> <span class="st">"Niveau de vie (€/an/UC)"</span>,</span>
+<span id="cb19-8"><a href="#cb19-8" aria-hidden="true" tabindex="-1"></a>     <span class="at">main =</span> <span class="st">"Aix — centroïde géométrique"</span>,</span>
+<span id="cb19-9"><a href="#cb19-9" aria-hidden="true" tabindex="-1"></a>     <span class="at">pch =</span> <span class="dv">20</span>, <span class="at">col =</span> <span class="fu">rgb</span>(<span class="fl">0.7</span>, <span class="fl">0.1</span>, <span class="fl">0.1</span>, <span class="fl">0.3</span>), <span class="at">cex =</span> <span class="fl">0.6</span>)</span>
+<span id="cb19-10"><a href="#cb19-10" aria-hidden="true" tabindex="-1"></a>mod_a_c <span class="ot">&lt;-</span> <span class="fu">lm</span>(niveau_vie <span class="sc">~</span> dist_centroide, <span class="at">data =</span> df_a)</span>
+<span id="cb19-11"><a href="#cb19-11" aria-hidden="true" tabindex="-1"></a><span class="fu">abline</span>(mod_a_c, <span class="at">col =</span> <span class="st">"red"</span>, <span class="at">lwd =</span> <span class="dv">2</span>)</span>
+<span id="cb19-12"><a href="#cb19-12" aria-hidden="true" tabindex="-1"></a>r2_ac <span class="ot">&lt;-</span> <span class="fu">round</span>(<span class="fu">summary</span>(mod_a_c)<span class="sc">$</span>r.squared, <span class="dv">3</span>)</span>
+<span id="cb19-13"><a href="#cb19-13" aria-hidden="true" tabindex="-1"></a>pente_ac <span class="ot">&lt;-</span> <span class="fu">round</span>(<span class="fu">coef</span>(mod_a_c)[<span class="dv">2</span>] <span class="sc">*</span> <span class="dv">1000</span>, <span class="dv">1</span>)</span>
+<span id="cb19-14"><a href="#cb19-14" aria-hidden="true" tabindex="-1"></a><span class="fu">legend</span>(<span class="st">"topright"</span>, <span class="at">legend =</span> <span class="fu">paste0</span>(<span class="st">"R² = "</span>, r2_ac, <span class="st">"</span><span class="sc">\n</span><span class="st">pente = "</span>, pente_ac, <span class="st">" €/km"</span>),</span>
+<span id="cb19-15"><a href="#cb19-15" aria-hidden="true" tabindex="-1"></a>       <span class="at">bty =</span> <span class="st">"n"</span>, <span class="at">text.col =</span> <span class="st">"red"</span>)</span>
+<span id="cb19-16"><a href="#cb19-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-17"><a href="#cb19-17" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(df_a<span class="sc">$</span>dist_historique <span class="sc">/</span> <span class="dv">1000</span>, df_a<span class="sc">$</span>niveau_vie,</span>
+<span id="cb19-18"><a href="#cb19-18" aria-hidden="true" tabindex="-1"></a>     <span class="at">xlab =</span> <span class="st">"Distance à la Rotonde (km)"</span>, <span class="at">ylab =</span> <span class="st">"Niveau de vie (€/an/UC)"</span>,</span>
+<span id="cb19-19"><a href="#cb19-19" aria-hidden="true" tabindex="-1"></a>     <span class="at">main =</span> <span class="st">"Aix — Place de la Rotonde"</span>,</span>
+<span id="cb19-20"><a href="#cb19-20" aria-hidden="true" tabindex="-1"></a>     <span class="at">pch =</span> <span class="dv">20</span>, <span class="at">col =</span> <span class="fu">rgb</span>(<span class="fl">0.1</span>, <span class="fl">0.1</span>, <span class="fl">0.7</span>, <span class="fl">0.3</span>), <span class="at">cex =</span> <span class="fl">0.6</span>)</span>
+<span id="cb19-21"><a href="#cb19-21" aria-hidden="true" tabindex="-1"></a>mod_a_h <span class="ot">&lt;-</span> <span class="fu">lm</span>(niveau_vie <span class="sc">~</span> dist_historique, <span class="at">data =</span> df_a)</span>
+<span id="cb19-22"><a href="#cb19-22" aria-hidden="true" tabindex="-1"></a><span class="fu">abline</span>(mod_a_h, <span class="at">col =</span> <span class="st">"darkblue"</span>, <span class="at">lwd =</span> <span class="dv">2</span>)</span>
+<span id="cb19-23"><a href="#cb19-23" aria-hidden="true" tabindex="-1"></a>r2_ah <span class="ot">&lt;-</span> <span class="fu">round</span>(<span class="fu">summary</span>(mod_a_h)<span class="sc">$</span>r.squared, <span class="dv">3</span>)</span>
+<span id="cb19-24"><a href="#cb19-24" aria-hidden="true" tabindex="-1"></a>pente_ah <span class="ot">&lt;-</span> <span class="fu">round</span>(<span class="fu">coef</span>(mod_a_h)[<span class="dv">2</span>] <span class="sc">*</span> <span class="dv">1000</span>, <span class="dv">1</span>)</span>
+<span id="cb19-25"><a href="#cb19-25" aria-hidden="true" tabindex="-1"></a><span class="fu">legend</span>(<span class="st">"topright"</span>, <span class="at">legend =</span> <span class="fu">paste0</span>(<span class="st">"R² = "</span>, r2_ah, <span class="st">"</span><span class="sc">\n</span><span class="st">pente = "</span>, pente_ah, <span class="st">" €/km"</span>),</span>
+<span id="cb19-26"><a href="#cb19-26" aria-hidden="true" tabindex="-1"></a>       <span class="at">bty =</span> <span class="st">"n"</span>, <span class="at">text.col =</span> <span class="st">"darkblue"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="raster_files/figure-html/unnamed-chunk-11-1.png" class="img-fluid figure-img" width="1056"></p>
+</figure>
+</div>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">1</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</section>
+<section id="synthèse-comparative" class="level2">
+<h2 class="anchored" data-anchor-id="synthèse-comparative">Synthèse comparative</h2>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>resultats <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">Ville              =</span> <span class="fu">c</span>(<span class="st">"Marseille"</span>,         <span class="st">"Marseille"</span>,  <span class="st">"Aix-en-Provence"</span>,   <span class="st">"Aix-en-Provence"</span>),</span>
+<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a>  Définition<span class="at">_centre  =</span> <span class="fu">c</span>(<span class="st">"Centroïde géom."</span>,   <span class="st">"Vieux-Port"</span>, <span class="st">"Centroïde géom."</span>,   <span class="st">"Place Rotonde"</span>),</span>
+<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">Pente_eur_par_km   =</span> <span class="fu">c</span>(<span class="fu">round</span>(<span class="fu">coef</span>(mod_m_c)[<span class="dv">2</span>]<span class="sc">*</span><span class="dv">1000</span>, <span class="dv">1</span>),</span>
+<span id="cb21-5"><a href="#cb21-5" aria-hidden="true" tabindex="-1"></a>                         <span class="fu">round</span>(<span class="fu">coef</span>(mod_m_h)[<span class="dv">2</span>]<span class="sc">*</span><span class="dv">1000</span>, <span class="dv">1</span>),</span>
+<span id="cb21-6"><a href="#cb21-6" aria-hidden="true" tabindex="-1"></a>                         <span class="fu">round</span>(<span class="fu">coef</span>(mod_a_c)[<span class="dv">2</span>]<span class="sc">*</span><span class="dv">1000</span>, <span class="dv">1</span>),</span>
+<span id="cb21-7"><a href="#cb21-7" aria-hidden="true" tabindex="-1"></a>                         <span class="fu">round</span>(<span class="fu">coef</span>(mod_a_h)[<span class="dv">2</span>]<span class="sc">*</span><span class="dv">1000</span>, <span class="dv">1</span>)),</span>
+<span id="cb21-8"><a href="#cb21-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">R2                 =</span> <span class="fu">c</span>(<span class="fu">round</span>(<span class="fu">summary</span>(mod_m_c)<span class="sc">$</span>r.squared, <span class="dv">3</span>),</span>
+<span id="cb21-9"><a href="#cb21-9" aria-hidden="true" tabindex="-1"></a>                         <span class="fu">round</span>(<span class="fu">summary</span>(mod_m_h)<span class="sc">$</span>r.squared, <span class="dv">3</span>),</span>
+<span id="cb21-10"><a href="#cb21-10" aria-hidden="true" tabindex="-1"></a>                         <span class="fu">round</span>(<span class="fu">summary</span>(mod_a_c)<span class="sc">$</span>r.squared, <span class="dv">3</span>),</span>
+<span id="cb21-11"><a href="#cb21-11" aria-hidden="true" tabindex="-1"></a>                         <span class="fu">round</span>(<span class="fu">summary</span>(mod_a_h)<span class="sc">$</span>r.squared, <span class="dv">3</span>))</span>
+<span id="cb21-12"><a href="#cb21-12" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb21-13"><a href="#cb21-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-14"><a href="#cb21-14" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(resultats, <span class="at">row.names =</span> <span class="cn">FALSE</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>           Ville Définition_centre Pente_eur_par_km    R2
+       Marseille   Centroïde géom.             56.0 0.000
+       Marseille        Vieux-Port            738.6 0.085
+ Aix-en-Provence   Centroïde géom.             93.5 0.001
+ Aix-en-Provence     Place Rotonde             61.7 0.001</code></pre>
+</div>
+</div>
+</section>
+<section id="interprétation" class="level2">
+<h2 class="anchored" data-anchor-id="interprétation">Interprétation</h2>
+<p>Les régressions ci-dessus testent l’hypothèse d’un <strong>gradient radial</strong> simple du niveau de vie en fonction de la distance au centre. Les coefficients de détermination (R²) très faibles, quel que soit le centre choisi (centroïde géométrique ou centre historique), montrent que <strong>la distance au centre seule explique très peu de variance du niveau de vie</strong> dans les deux villes.</p>
+<p>Ce résultat n’invalide pas l’existence d’inégalités centre/périphérie, mais il montre qu’elles ne suivent pas un schéma circulaire homogène. À Marseille en particulier, les inégalités sont <strong>sectorielles</strong> (opposition nord/sud le long de la côte) plutôt que radiales : on peut trouver à 5 km du Vieux-Port aussi bien des quartiers très aisés (sud) que très défavorisés (nord). Le signe positif de la pente — quand il est observé — indique néanmoins qu’en moyenne, s’éloigner du centre s’accompagne d’une légère hausse du niveau de vie à Marseille.</p>
+</section>
+<section id="carte-des-zones-de-distance-marseille-vieux-port" class="level2">
+<h2 class="anchored" data-anchor-id="carte-des-zones-de-distance-marseille-vieux-port">Carte des zones de distance — Marseille (Vieux-Port)</h2>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>filo_m<span class="sc">$</span>zone_dist <span class="ot">&lt;-</span> <span class="fu">cut</span>(</span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>  filo_m<span class="sc">$</span>dist_historique,</span>
+<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">breaks =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">2000</span>, <span class="dv">5000</span>, <span class="dv">10000</span>, <span class="cn">Inf</span>),</span>
+<span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">labels =</span> <span class="fu">c</span>(<span class="st">"0-2 km (hyper-centre)"</span>,</span>
+<span id="cb23-5"><a href="#cb23-5" aria-hidden="true" tabindex="-1"></a>             <span class="st">"2-5 km (centre élargi)"</span>,</span>
+<span id="cb23-6"><a href="#cb23-6" aria-hidden="true" tabindex="-1"></a>             <span class="st">"5-10 km (péri-urbain)"</span>,</span>
+<span id="cb23-7"><a href="#cb23-7" aria-hidden="true" tabindex="-1"></a>             <span class="st">"&gt; 10 km (périphérie)"</span>)</span>
+<span id="cb23-8"><a href="#cb23-8" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb23-9"><a href="#cb23-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-10"><a href="#cb23-10" aria-hidden="true" tabindex="-1"></a><span class="fu">mf_map</span>(marseille, <span class="at">col =</span> <span class="st">"grey95"</span>, <span class="at">border =</span> <span class="st">"grey50"</span>)</span>
+<span id="cb23-11"><a href="#cb23-11" aria-hidden="true" tabindex="-1"></a><span class="fu">mf_map</span>(filo_m, <span class="at">type =</span> <span class="st">"typo"</span>, <span class="at">var =</span> <span class="st">"zone_dist"</span>,</span>
+<span id="cb23-12"><a href="#cb23-12" aria-hidden="true" tabindex="-1"></a>       <span class="at">pal =</span> <span class="fu">c</span>(<span class="st">"#d73027"</span>, <span class="st">"#fc8d59"</span>, <span class="st">"#fee090"</span>, <span class="st">"#91bfdb"</span>),</span>
+<span id="cb23-13"><a href="#cb23-13" aria-hidden="true" tabindex="-1"></a>       <span class="at">border =</span> <span class="cn">NA</span>, <span class="at">leg_title =</span> <span class="st">"Zone de distance"</span>, <span class="at">add =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb23-14"><a href="#cb23-14" aria-hidden="true" tabindex="-1"></a><span class="fu">mf_map</span>(marseille, <span class="at">col =</span> <span class="cn">NA</span>, <span class="at">border =</span> <span class="st">"black"</span>, <span class="at">lwd =</span> <span class="fl">1.5</span>, <span class="at">add =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb23-15"><a href="#cb23-15" aria-hidden="true" tabindex="-1"></a><span class="fu">mf_title</span>(<span class="st">"Zonage de distance au Vieux-Port — Marseille"</span>)</span>
+<span id="cb23-16"><a href="#cb23-16" aria-hidden="true" tabindex="-1"></a><span class="fu">mf_credits</span>(<span class="st">"Sources : INSEE Filosofi 2021 | IGN Admin Express 2025 | OSM | terra"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="raster_files/figure-html/unnamed-chunk-13-1.png" class="img-fluid figure-img" width="864"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="carte-des-zones-de-distance-aix-en-provence-rotonde" class="level2">
+<h2 class="anchored" data-anchor-id="carte-des-zones-de-distance-aix-en-provence-rotonde">Carte des zones de distance — Aix-en-Provence (Rotonde)</h2>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>filo_a<span class="sc">$</span>zone_dist <span class="ot">&lt;-</span> <span class="fu">cut</span>(</span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>  filo_a<span class="sc">$</span>dist_historique,</span>
+<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">breaks =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">2000</span>, <span class="dv">5000</span>, <span class="dv">10000</span>, <span class="cn">Inf</span>),</span>
+<span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">labels =</span> <span class="fu">c</span>(<span class="st">"0-2 km (hyper-centre)"</span>,</span>
+<span id="cb24-5"><a href="#cb24-5" aria-hidden="true" tabindex="-1"></a>             <span class="st">"2-5 km (centre élargi)"</span>,</span>
+<span id="cb24-6"><a href="#cb24-6" aria-hidden="true" tabindex="-1"></a>             <span class="st">"5-10 km (péri-urbain)"</span>,</span>
+<span id="cb24-7"><a href="#cb24-7" aria-hidden="true" tabindex="-1"></a>             <span class="st">"&gt; 10 km (périphérie)"</span>)</span>
+<span id="cb24-8"><a href="#cb24-8" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb24-9"><a href="#cb24-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-10"><a href="#cb24-10" aria-hidden="true" tabindex="-1"></a><span class="fu">mf_map</span>(aix, <span class="at">col =</span> <span class="st">"grey95"</span>, <span class="at">border =</span> <span class="st">"grey50"</span>)</span>
+<span id="cb24-11"><a href="#cb24-11" aria-hidden="true" tabindex="-1"></a><span class="fu">mf_map</span>(filo_a, <span class="at">type =</span> <span class="st">"typo"</span>, <span class="at">var =</span> <span class="st">"zone_dist"</span>,</span>
+<span id="cb24-12"><a href="#cb24-12" aria-hidden="true" tabindex="-1"></a>       <span class="at">pal =</span> <span class="fu">c</span>(<span class="st">"#d73027"</span>, <span class="st">"#fc8d59"</span>, <span class="st">"#fee090"</span>, <span class="st">"#91bfdb"</span>),</span>
+<span id="cb24-13"><a href="#cb24-13" aria-hidden="true" tabindex="-1"></a>       <span class="at">border =</span> <span class="cn">NA</span>, <span class="at">leg_title =</span> <span class="st">"Zone de distance"</span>, <span class="at">add =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb24-14"><a href="#cb24-14" aria-hidden="true" tabindex="-1"></a><span class="fu">mf_map</span>(aix, <span class="at">col =</span> <span class="cn">NA</span>, <span class="at">border =</span> <span class="st">"black"</span>, <span class="at">lwd =</span> <span class="fl">1.5</span>, <span class="at">add =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb24-15"><a href="#cb24-15" aria-hidden="true" tabindex="-1"></a><span class="fu">mf_title</span>(<span class="st">"Zonage de distance à la Place de la Rotonde — Aix-en-Provence"</span>)</span>
+<span id="cb24-16"><a href="#cb24-16" aria-hidden="true" tabindex="-1"></a><span class="fu">mf_credits</span>(<span class="st">"Sources : INSEE Filosofi 2021 | IGN Admin Express 2025 | OSM | terra"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="raster_files/figure-html/unnamed-chunk-14-1.png" class="img-fluid figure-img" width="864"></p>
 </figure>
 </div>
 </div>

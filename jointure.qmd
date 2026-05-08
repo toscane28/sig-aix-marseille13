@@ -4,17 +4,17 @@ title: "Jointures spatiales"
 
 ## Introduction
 
-Cette page présente la jointure spatiale entre les carreaux Filosofi (200m) et les IRIS, permettant d'agréger les revenus à une maille administrative.
+Cette page présente la **jointure spatiale** entre deux jeux de données géographiques de mailles différentes : les **carreaux Filosofi 200m** (INSEE) et les **IRIS** (IGN). L'objectif est de reconstituer un niveau de vie agrégé à l'échelle administrative IRIS, plus interprétable que les carreaux bruts pour la lecture des résultats.
 
-## Schéma de géotraitement
+## Schéma de géotraitementfilosofi.gpkg (5 681 carreaux 200m, niveau_vie)
 
-```         
-filosofi.gpkg ──┐
-                ├──► st_join (st_within) ──► revenu par carreau + CODE_IRIS
-iris.gpkg     ──┘                        ──► aggregate (médiane) par IRIS
-                                         ──► merge avec géométries IRIS
-                                         ──► iris_revenus  ──► carte choroplèthe
-```
+──► centroïde de chaque carreau └─► st_intersects ◄──── iris.gpkg (487 IRIS) │ ├─► association carreau ↔ code_iris │ └─► agrégation par IRIS (moyenne pondérée par population) │ └─► iris_rev (niveau de vie par IRIS) │ └─► carte choroplèthe + comparaison Aix/Marseille## Note méthodologique
+
+Pour chaque IRIS, le niveau de vie agrégé est calculé comme une **moyenne pondérée par la population** des carreaux qui le composent :
+
+$$\text{niveau\_vie}_\text{IRIS} = \frac{\sum_\text{carreaux} \text{ind\_snv}}{\sum_\text{carreaux} \text{ind}}$$
+
+Cette formulation reconstitue le niveau de vie moyen des habitants de l'IRIS à partir de la somme des niveaux de vie winsorisés (variable `ind_snv` INSEE) divisée par la somme des individus (`ind`). Elle est plus rigoureuse qu'une simple médiane des niveaux de vie par carreau, qui ignorerait le poids démographique de chaque carreau.
 
 ## Librairies
 
@@ -41,51 +41,62 @@ cat("Carreaux :", nrow(filosofi), "\n")
 
 ## Jointure spatiale carreaux → IRIS
 
+Pour éviter les pertes de carreaux qui se trouvent à cheval sur deux IRIS (problème observé avec `st_within`), on utilise les **centroïdes** des carreaux comme points de référence pour la jointure spatiale. Chaque carreau est ainsi rattaché à l'IRIS qui contient son centre.
+
 ```{r}
 #| message: false
 #| warning: false
 
-# Joindre chaque carreau à l'IRIS qui le contient
-# On garde seulement les colonnes utiles de iris
+# Calculer les centroïdes des carreaux pour la jointure
+filosofi_pt <- st_centroid(filosofi)
+
+# Joindre chaque centroïde de carreau à l'IRIS qui le contient
 join <- st_join(
-  filosofi[, c("ind_snv", "geom")],
-  iris[, c("code_iris", "nom_iris", "nom_commune", "geom")],
+  filosofi_pt[, c("ind", "ind_snv", "niveau_vie")],
+  iris[, c("code_iris", "nom_iris", "nom_commune")],
   join = st_within
 )
 
-cat("Carreaux joints à un IRIS :", sum(!is.na(join$code_iris)), "\n")
-cat("Carreaux sans IRIS        :", sum(is.na(join$code_iris)), "\n")
+cat("Carreaux total           :", nrow(join), "\n")
+cat("Carreaux joints à un IRIS:", sum(!is.na(join$code_iris)), "\n")
+cat("Carreaux sans IRIS       :", sum(is.na(join$code_iris)), "\n")
+cat("Taux de jointure réussie :", round(100 * sum(!is.na(join$code_iris)) / nrow(join), 1), "%\n")
 ```
 
-## Agrégation du revenu médian par IRIS
+## Agrégation du niveau de vie par IRIS (moyenne pondérée)
 
 ```{r}
 #| message: false
 #| warning: false
 
+# Préparer les données : on garde les carreaux joints avec ind > 0
 df <- st_drop_geometry(join)
-df <- df[!is.na(df$code_iris) & !is.na(df$ind_snv), ]
+df <- df[!is.na(df$code_iris) & !is.na(df$ind_snv) & !is.na(df$ind) & df$ind > 0, ]
 
-revenu_iris <- aggregate(
-  df$ind_snv,
-  by  = list(code_iris = df$code_iris),
-  FUN = median,
+# Agrégation : moyenne pondérée par la population
+agg_iris <- aggregate(
+  cbind(ind_snv, ind) ~ code_iris,
+  data = df,
+  FUN  = sum,
   na.rm = TRUE
 )
-names(revenu_iris)[2] <- "revenu_median"
+agg_iris$niveau_vie_iris <- agg_iris$ind_snv / agg_iris$ind
 
 # Fusionner avec les géométries IRIS
-iris_rev <- merge(iris, revenu_iris, by = "code_iris")
+iris_rev <- merge(iris, 
+                  agg_iris[, c("code_iris", "ind", "niveau_vie_iris")], 
+                  by = "code_iris")
 
-cat("IRIS avec données de revenu :", nrow(iris_rev), "\n")
-summary(iris_rev$revenu_median)
+cat("IRIS avec données de revenu :", nrow(iris_rev), "/", nrow(iris), "\n\n")
+cat("Statistiques du niveau de vie agrégé par IRIS :\n")
+print(summary(iris_rev$niveau_vie_iris))
 ```
 
-## Carte des revenus médians par IRIS
+## Carte du niveau de vie par IRIS
 
 ```{r}
-#| fig-width: 9
-#| fig-height: 7
+#| fig-width: 10
+#| fig-height: 8
 #| message: false
 #| warning: false
 
@@ -93,36 +104,78 @@ mf_map(communes, col = "grey95", border = "grey50")
 mf_map(
   iris_rev,
   type      = "choro",
-  var       = "revenu_median",
-  nbreaks   = 5,
+  var       = "niveau_vie_iris",
+  breaks    = "quantile",
+  nbreaks   = 7,
   pal       = "RdYlGn",
   border    = "white",
   lwd       = 0.3,
-  leg_title = "Revenu médian\n(€/UC)",
+  leg_title = "Niveau de vie moyen\n(€/an/UC)",
+  leg_val_rnd = 0,
   add       = TRUE
 )
 mf_map(communes, col = NA, border = "black", lwd = 1.5, add = TRUE)
-mf_title("Revenu médian par IRIS — Aix-en-Provence et Marseille")
+mf_title("Niveau de vie moyen par IRIS\nAix-en-Provence et Marseille (Filosofi 2021)")
 mf_credits("Sources : INSEE Filosofi 2021 × IGN IRIS 2025")
 ```
 
-## Comparaison par ville
+## Comparaison Aix vs Marseille
+
+Étant donné que Marseille est divisée en arrondissements dans la table IRIS (`Marseille 1er Arrondissement`, etc.), on regroupe ici tous les IRIS marseillais sous une seule étiquette pour faciliter la comparaison avec Aix-en-Provence.
 
 ```{r}
 #| message: false
 #| warning: false
 
-iris_rev$ville <- iris_rev$nom_commune
+# Créer une étiquette de ville simplifiée
+iris_rev$ville <- ifelse(
+  grepl("Marseille", iris_rev$nom_commune),
+  "Marseille",
+  iris_rev$nom_commune
+)
 
-# Résumé statistique par ville
-tapply(iris_rev$revenu_median, iris_rev$ville, function(x) {
-  c(Minimum  = round(min(x, na.rm=TRUE)),
+# Statistiques par ville
+stats_par_ville <- tapply(iris_rev$niveau_vie_iris, iris_rev$ville, function(x) {
+  c(N        = length(x),
+    Minimum  = round(min(x, na.rm=TRUE)),
+    Q1       = round(quantile(x, 0.25, na.rm=TRUE)),
     Médiane  = round(median(x, na.rm=TRUE)),
     Moyenne  = round(mean(x, na.rm=TRUE)),
+    Q3       = round(quantile(x, 0.75, na.rm=TRUE)),
     Maximum  = round(max(x, na.rm=TRUE)))
 })
+print(stats_par_ville)
 ```
+
+```{r}
+#| fig-width: 9
+#| fig-height: 6
+#| message: false
+#| warning: false
+
+# Boxplot comparatif
+boxplot(
+  niveau_vie_iris ~ ville,
+  data   = iris_rev,
+  col    = c("#fdae61", "#abd9e9"),
+  ylab   = "Niveau de vie moyen par IRIS (€/an/UC)",
+  xlab   = "",
+  main   = "Distribution du niveau de vie par IRIS — Aix vs Marseille"
+)
+```
+
+## Lecture des résultats
+
+**Constats principaux issus de la jointure :**
+
+- **Aix est globalement plus aisée** : médiane à 28 255 €/an/UC contre 22 507 € à Marseille, soit un écart de **+25,5 %** en faveur d'Aix-en-Provence.
+
+- **Aix est plus homogène** : 75 % des IRIS d'Aix se situent entre 24 656 € (Q1) et 30 788 € (Q3), soit un intervalle interquartile de 6 132 €. À Marseille, l'intervalle interquartile est de 7 692 € (entre 19 338 € et 27 030 €), soit **25 % plus large**.
+
+- **Marseille est plus polarisée** : son maximum (39 055 €) est même *supérieur* à celui d'Aix (35 965 €). Cela révèle l'existence d'IRIS très aisés à Marseille (notamment dans les 7ᵉ et 8ᵉ arrondissements — Endoume, Bonneveine, le Roucas-Blanc), tout en coexistant avec des IRIS très pauvres (13 185 €) localisés dans les quartiers nord.
+
+- **L'écart-type plus élevé à Marseille** (5 531 € contre 5 007 € à Aix) confirme statistiquement la **fragmentation socio-spatiale** marseillaise.
 
 ## Conclusion
 
-La jointure spatiale confirme le contraste entre les deux villes : Aix-en-Provence présente des IRIS avec des revenus médians globalement plus élevés, tandis que Marseille montre une forte hétérogénéité, avec des IRIS très pauvres concentrés dans les quartiers nord et des IRIS aisés dans les arrondissements sud.
+La jointure spatiale entre les **5 681 carreaux Filosofi 2021** et les **447 IRIS 2025** des deux communes (taux de réussite de la jointure : 99,7 %) a permis de calculer un niveau de vie moyen agrégé pour chaque IRIS, par moyenne pondérée par la population. Les statistiques descriptives confirment quantitativement la différence majeure entre les deux villes : **Aix-en-Provence présente des IRIS aux niveaux de vie globalement plus élevés et plus homogènes**, tandis que **Marseille affiche une forte hétérogénéité interne**, avec des IRIS très pauvres (notamment dans les arrondissements nord) coexistant avec des IRIS aisés (arrondissements sud, 7ᵉ et 8ᵉ). Cette structure spatiale fragmentée à Marseille, opposée à l'homogénéité aisée d'Aix, sera mise en perspective dans la conclusion générale du site.

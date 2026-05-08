@@ -71,6 +71,35 @@ ul.task-list li input[type="checkbox"] {
   }
 }</script>
 
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script defer="" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
 
 </head>
 
@@ -125,9 +154,21 @@ ul.task-list li input[type="checkbox"] {
   <ul>
   <li><a href="#introduction" id="toc-introduction" class="nav-link active" data-scroll-target="#introduction">Introduction</a></li>
   <li><a href="#problématique" id="toc-problématique" class="nav-link" data-scroll-target="#problématique">Problématique</a></li>
-  <li><a href="#données-utilisées" id="toc-données-utilisées" class="nav-link" data-scroll-target="#données-utilisées">Données utilisées</a></li>
+  <li><a href="#données-utilisées" id="toc-données-utilisées" class="nav-link" data-scroll-target="#données-utilisées">Données utilisées</a>
+  <ul class="collapse">
+  <li><a href="#note-méthodologique-sur-le-niveau-de-vie" id="toc-note-méthodologique-sur-le-niveau-de-vie" class="nav-link" data-scroll-target="#note-méthodologique-sur-le-niveau-de-vie">Note méthodologique sur le niveau de vie</a></li>
+  </ul></li>
   <li><a href="#organisation-du-site" id="toc-organisation-du-site" class="nav-link" data-scroll-target="#organisation-du-site">Organisation du site</a></li>
-  <li><a href="#conclusion" id="toc-conclusion" class="nav-link" data-scroll-target="#conclusion">Conclusion</a></li>
+  <li><a href="#principaux-résultats" id="toc-principaux-résultats" class="nav-link" data-scroll-target="#principaux-résultats">Principaux résultats</a>
+  <ul class="collapse">
+  <li><a href="#à-léchelle-des-iris-jointure-spatiale-997-de-carreaux-joints" id="toc-à-léchelle-des-iris-jointure-spatiale-997-de-carreaux-joints" class="nav-link" data-scroll-target="#à-léchelle-des-iris-jointure-spatiale-997-de-carreaux-joints">À l’échelle des IRIS (jointure spatiale, 99,7 % de carreaux joints)</a></li>
+  <li><a href="#gradient-centre-périphérie-régressions-raster" id="toc-gradient-centre-périphérie-régressions-raster" class="nav-link" data-scroll-target="#gradient-centre-périphérie-régressions-raster">Gradient centre-périphérie (régressions raster)</a></li>
+  </ul></li>
+  <li><a href="#conclusion" id="toc-conclusion" class="nav-link" data-scroll-target="#conclusion">Conclusion</a>
+  <ul class="collapse">
+  <li><a href="#limites-de-létude" id="toc-limites-de-létude" class="nav-link" data-scroll-target="#limites-de-létude">Limites de l’étude</a></li>
+  <li><a href="#prolongements-possibles" id="toc-prolongements-possibles" class="nav-link" data-scroll-target="#prolongements-possibles">Prolongements possibles</a></li>
+  </ul></li>
   </ul>
 </nav>
     </div>
@@ -155,20 +196,119 @@ ul.task-list li input[type="checkbox"] {
 
 <section id="introduction" class="level2">
 <h2 class="anchored" data-anchor-id="introduction">Introduction</h2>
-<p>Ce projet analyse les inégalités de revenus entre le centre-ville et la périphérie de deux grandes villes méditerranéennes : <strong>Aix-en-Provence</strong> et <strong>Marseille</strong>.</p>
-<p>Ces deux villes constituent un cas d’étude particulièrement intéressant car elles présentent des profils socio-spatiaux supposément opposés : Aix-en-Provence est historiquement associée à une population aisée et un centre-ville riche, tandis que Marseille est marquée par une pauvreté concentrée dans certains quartiers centraux (notamment les quartiers nord) contrastant avec des périphéries résidentielles plus aisées.</p>
+<p>Ce projet de SIG analyse les <strong>inégalités de niveau de vie</strong> entre le centre-ville et la périphérie de deux grandes villes méditerranéennes : <strong>Aix-en-Provence</strong> et <strong>Marseille</strong>. Ces deux communes voisines (~30 km de distance) appartiennent à la même métropole (Aix-Marseille-Provence) mais présentent des profils socio-spatiaux supposés opposés.</p>
+<p><strong>Aix-en-Provence</strong>, ancienne capitale de la Provence, est historiquement associée à une population aisée concentrée autour de son centre historique (la Place de la Rotonde, le cours Mirabeau, le quartier Mazarin). <strong>Marseille</strong>, premier port de France, est traversée par des dynamiques territoriales complexes : un centre-ville historique (Vieux-Port, Belle-de-Mai, Noailles) souvent associé à la pauvreté et à la précarité urbaine, des <strong>quartiers nord</strong> très défavorisés, et des arrondissements sud (7ᵉ, 8ᵉ : Endoume, Bonneveine, le Roucas-Blanc) parmi les plus aisés de la commune.</p>
+<p>Ce contraste rend la comparaison particulièrement riche pour interroger le <strong>modèle classique du gradient centre-périphérie</strong> dans les villes françaises.</p>
 </section>
 <section id="problématique" class="level2">
 <h2 class="anchored" data-anchor-id="problématique">Problématique</h2>
-<p><strong>Dans quelle mesure les inégalités de revenus entre centre et périphérie diffèrent-elles entre Aix-en-Provence et Marseille ?</strong></p>
-<p>L’hypothèse est double :</p>
+<p><strong>Dans quelle mesure les inégalités de niveau de vie entre centre et périphérie diffèrent-elles entre Aix-en-Provence et Marseille, et le modèle radial du gradient centre-périphérie est-il pertinent pour décrire ces deux villes ?</strong></p>
+<p>L’hypothèse de départ est double :</p>
 <ul>
-<li>À <strong>Marseille</strong>, le centre concentre la pauvreté tandis que la périphérie résidentielle (sud, est) présente des revenus plus élevés.</li>
-<li>À <strong>Aix-en-Provence</strong>, le schéma est inversé : le centre historique est riche et les marges périphériques sont plus modestes.</li>
+<li>À <strong>Marseille</strong>, le centre historique concentre la pauvreté tandis que les périphéries (en particulier les arrondissements sud) présentent des niveaux de vie plus élevés.</li>
+<li>À <strong>Aix-en-Provence</strong>, le schéma serait inversé : centre historique aisé et marges périphériques plus modestes.</li>
 </ul>
+<p>Cette hypothèse sera testée à travers trois approches complémentaires : (1) une analyse vectorielle directe par carreau Filosofi 200m, (2) une analyse raster de la distance au centre couplée à une régression linéaire du niveau de vie, et (3) une jointure spatiale agrégeant les carreaux à l’échelle administrative des IRIS.</p>
 </section>
 <section id="données-utilisées" class="level2">
 <h2 class="anchored" data-anchor-id="données-utilisées">Données utilisées</h2>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>Donnée</th>
+<th>Source</th>
+<th>Millésime</th>
+<th>Format</th>
+<th>Description</th>
+<th>Usage dans le projet</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Contours IRIS (PE)</td>
+<td><a href="https://geoservices.ign.fr/contoursiris">IGN / cartes.gouv.fr</a></td>
+<td>2025</td>
+<td>GeoPackage (Lambert-93)</td>
+<td>Maillage infra-communal des îlots regroupés pour l’information statistique (IRIS) en France</td>
+<td>Maille administrative pour l’agrégation des données</td>
+</tr>
+<tr class="even">
+<td>Carreaux 200m Filosofi</td>
+<td><a href="https://www.insee.fr/fr/statistiques/8735162">INSEE</a></td>
+<td>2021</td>
+<td>GeoPackage (Lambert-93)</td>
+<td>Données fiscales et sociales carroyées : 34 variables par carreau de 200×200m, dont <code>ind</code> (nombre d’individus) et <code>ind_snv</code> (somme winsorisée des niveaux de vie)</td>
+<td>Source principale pour le calcul du niveau de vie moyen</td>
+</tr>
+<tr class="odd">
+<td>Admin Express COG Cartoplus</td>
+<td><a href="https://geoservices.ign.fr/adminexpress">IGN / cartes.gouv.fr</a></td>
+<td>2025</td>
+<td>GeoPackage (Lambert-93)</td>
+<td>Limites administratives officielles des communes françaises</td>
+<td>Définition des emprises Aix et Marseille</td>
+</tr>
+</tbody>
+</table>
+<section id="note-méthodologique-sur-le-niveau-de-vie" class="level3">
+<h3 class="anchored" data-anchor-id="note-méthodologique-sur-le-niveau-de-vie">Note méthodologique sur le niveau de vie</h3>
+<p>Le niveau de vie moyen par carreau est calculé selon la documentation INSEE Filosofi 2021 :</p>
+<p><span class="math display">\[\text{niveau\_vie} = \frac{\text{ind\_snv}}{\text{ind}}\]</span></p>
+<p>où <code>ind_snv</code> est la <strong>somme</strong> des niveaux de vie winsorisés des individus du carreau (revenu disponible du ménage divisé par les unités de consommation), et <code>ind</code> le nombre d’individus. Le résultat est exprimé en <strong>euros par an et par unité de consommation (€/an/UC)</strong>.</p>
+</section>
+</section>
+<section id="organisation-du-site" class="level2">
+<h2 class="anchored" data-anchor-id="organisation-du-site">Organisation du site</h2>
+<ul>
+<li><p><strong><a href="vecteur.html">GT Vecteur</a></strong> : préparation des données, cartes choroplèthes du niveau de vie par carreau (vue d’ensemble, Marseille seule, Aix seule), zones centre/périphérie par buffer 2 km, et <strong>carte interactive <code>mapview</code></strong> pour exploration détaillée.</p></li>
+<li><p><strong><a href="raster.html">GT Raster</a></strong> : construction de rasters de distance au centre selon deux définitions (centroïde géométrique vs centre historique reconnu), régressions linéaires niveau de vie ~ distance, comparaison méthodologique des résultats.</p></li>
+<li><p><strong><a href="jointure.html">Jointures</a></strong> : jointure spatiale entre les 5 681 carreaux Filosofi et les 447 IRIS, agrégation par moyenne pondérée par la population, comparaison statistique Aix vs Marseille (boxplot et résumés).</p></li>
+</ul>
+</section>
+<section id="principaux-résultats" class="level2">
+<h2 class="anchored" data-anchor-id="principaux-résultats">Principaux résultats</h2>
+<section id="à-léchelle-des-iris-jointure-spatiale-997-de-carreaux-joints" class="level3">
+<h3 class="anchored" data-anchor-id="à-léchelle-des-iris-jointure-spatiale-997-de-carreaux-joints">À l’échelle des IRIS (jointure spatiale, 99,7 % de carreaux joints)</h3>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>Statistique</th>
+<th>Aix-en-Provence</th>
+<th>Marseille</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Nombre d’IRIS</td>
+<td>54</td>
+<td>386</td>
+</tr>
+<tr class="even">
+<td>Médiane (€/an/UC)</td>
+<td><strong>28 255</strong></td>
+<td><strong>22 507</strong></td>
+</tr>
+<tr class="odd">
+<td>Moyenne (€/an/UC)</td>
+<td>27 223</td>
+<td>23 041</td>
+</tr>
+<tr class="even">
+<td>Écart-type (€/an/UC)</td>
+<td>5 007</td>
+<td>5 531</td>
+</tr>
+<tr class="odd">
+<td>Min – Max</td>
+<td>15 758 – 35 965</td>
+<td>13 185 – 39 055</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Aix présente un niveau de vie médian supérieur de +25,5 %</strong> par rapport à Marseille, et une distribution plus homogène. Marseille est plus polarisée : son maximum dépasse celui d’Aix, mais son minimum est aussi plus bas, traduisant une forte fragmentation socio-spatiale interne.</p>
+</section>
+<section id="gradient-centre-périphérie-régressions-raster" class="level3">
+<h3 class="anchored" data-anchor-id="gradient-centre-périphérie-régressions-raster">Gradient centre-périphérie (régressions raster)</h3>
 <table class="caption-top table">
 <colgroup>
 <col style="width: 25%">
@@ -178,48 +318,71 @@ ul.task-list li input[type="checkbox"] {
 </colgroup>
 <thead>
 <tr class="header">
-<th>Donnée</th>
-<th>Source</th>
-<th>Millésime</th>
-<th>Usage dans le projet</th>
+<th>Ville</th>
+<th>Centre considéré</th>
+<th>Pente (€/km)</th>
+<th>R²</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
-<td>Contours IRIS (PE)</td>
-<td>IGN / cartes.gouv.fr</td>
-<td>2025</td>
-<td>Maillage infra-communal</td>
+<td>Marseille</td>
+<td>Centroïde géométrique</td>
+<td>+56,0</td>
+<td>0,000</td>
 </tr>
 <tr class="even">
-<td>Carreaux 200m Filosofi</td>
-<td>INSEE</td>
-<td>2021</td>
-<td>Revenu médian par unité de consommation</td>
+<td><strong>Marseille</strong></td>
+<td><strong>Vieux-Port (centre historique)</strong></td>
+<td><strong>+738,6</strong></td>
+<td><strong>0,085</strong></td>
 </tr>
 <tr class="odd">
-<td>Admin Express COG Cartoplus</td>
-<td>IGN / cartes.gouv.fr</td>
-<td>2025</td>
-<td>Limites communales (Lambert-93)</td>
+<td>Aix-en-Provence</td>
+<td>Centroïde géométrique</td>
+<td>+93,5</td>
+<td>0,001</td>
+</tr>
+<tr class="even">
+<td>Aix-en-Provence</td>
+<td>Place de la Rotonde</td>
+<td>+61,7</td>
+<td>0,001</td>
 </tr>
 </tbody>
 </table>
+<p>À <strong>Marseille</strong>, lorsqu’on choisit le <strong>Vieux-Port</strong> comme centre, la régression révèle un <strong>gradient positif statistiquement détectable</strong> : chaque kilomètre d’éloignement du Vieux-Port s’accompagne en moyenne d’une hausse de +738 € du niveau de vie annuel. Le centre historique est donc effectivement plus pauvre que les périphéries, conformément à l’hypothèse.</p>
+<p>À <strong>Aix-en-Provence</strong>, en revanche, <strong>aucun gradient n’est détectable</strong> (R² ≈ 0), quel que soit le centre considéré. La commune est socio-spatialement homogène : il n’existe pas d’opposition centre/périphérie en termes de niveau de vie.</p>
 </section>
-<section id="organisation-du-site" class="level2">
-<h2 class="anchored" data-anchor-id="organisation-du-site">Organisation du site</h2>
-<ul>
-<li><strong>GT Vecteur</strong> : préparation des données, cartes de revenus par carreau, comparaison centre/périphérie</li>
-<li><strong>GT Raster</strong> : raster de distance au centre, relation distance-revenu</li>
-<li><strong>Jointures</strong> : agrégation des carreaux Filosofi à l’échelle des IRIS</li>
-</ul>
 </section>
 <section id="conclusion" class="level2">
 <h2 class="anchored" data-anchor-id="conclusion">Conclusion</h2>
-<p><em>(à compléter après les analyses)</em></p>
-<p>Les résultats confirment-ils l’hypothèse d’une inversion du gradient centre-périphérie entre les deux villes ? Les cartes et analyses des pages suivantes apportent des éléments de réponse quantitatifs à cette question.</p>
+<p>L’analyse géomatique des données INSEE Filosofi 2021 et IGN apporte des éléments de réponse <strong>quantitatifs et nuancés</strong> à la problématique posée.</p>
+<p><strong>Premièrement</strong>, l’hypothèse d’une <strong>différence importante entre Aix et Marseille est confirmée</strong> : Aix-en-Provence présente un niveau de vie médian par IRIS supérieur de 25,5 % à celui de Marseille (28 255 € contre 22 507 € par an et par UC), avec une dispersion plus faible (écart-type de 5 007 € contre 5 531 €).</p>
+<p><strong>Deuxièmement</strong>, l’hypothèse d’une <strong>inversion du gradient centre-périphérie entre les deux villes est partiellement validée</strong>, mais elle nécessite une <strong>précision méthodologique cruciale</strong> : le choix du “centre” change radicalement les résultats. Avec le centroïde géométrique, aucun gradient n’apparaît dans les deux villes. Mais lorsqu’on prend les <strong>véritables centres historiques</strong> (Vieux-Port, Place de la Rotonde), Marseille révèle un gradient positif significatif (+738 €/km, R² = 0,085) : son centre est bien plus pauvre que ses périphéries. Aix, en revanche, conserve un gradient quasi-nul, signe d’une <strong>homogénéité socio-spatiale</strong> qui distingue cette ville moyenne du modèle marseillais.</p>
+<p><strong>Troisièmement</strong>, le résultat le plus saillant n’est pas tant une “inversion” qu’une <strong>différence de structure spatiale</strong> :</p>
+<ul>
+<li><strong>Marseille</strong> présente une organisation <strong>fragmentée et sectorielle</strong> (opposition nord/sud le long de la côte, gradient radial atténué depuis le Vieux-Port).</li>
+<li><strong>Aix</strong> présente une organisation <strong>homogène</strong> (peu de variations internes, niveau de vie globalement aisé sur l’ensemble de la commune).</li>
+</ul>
+<p>Plutôt qu’un simple “centre riche vs centre pauvre”, c’est donc la <strong>morphologie même des inégalités urbaines</strong> qui distingue ces deux villes : <strong>dispersion à Marseille, concentration à Aix</strong>.</p>
+<section id="limites-de-létude" class="level3">
+<h3 class="anchored" data-anchor-id="limites-de-létude">Limites de l’étude</h3>
+<ul>
+<li>Le découpage en “centre” (buffer de 2 km) reste arbitraire et ne reflète pas exactement les limites perçues du centre-ville par les habitants.</li>
+<li>Le niveau de vie <em>moyen</em> (calculé par <code>ind_snv / ind</code>) diffère légèrement de la <em>médiane</em> qui est l’indicateur INSEE de référence pour les revenus.</li>
+<li>L’étude n’inclut que deux variables (niveau de vie et distance) ; une approche multivariée (logement social, chômage, démographie) permettrait d’affiner l’analyse.</li>
+<li>La régression linéaire suppose une relation monotone qui peut masquer des structures spatiales plus complexes (poches, quartiers).</li>
+</ul>
+</section>
+<section id="prolongements-possibles" class="level3">
+<h3 class="anchored" data-anchor-id="prolongements-possibles">Prolongements possibles</h3>
+<p>Une suite naturelle serait d’élargir la comparaison à d’autres villes méditerranéennes (Nice, Toulon, Montpellier) ou de croiser les données fiscales avec d’autres indicateurs (taux de chômage, part de logement social, accès aux services publics) pour mieux qualifier les structures socio-spatiales observées.</p>
+<hr>
+<p><em>Site réalisé dans le cadre d’un devoir de SIG. Sources : INSEE Filosofi 2021, IGN Admin Express et IRIS 2025, OpenStreetMap (coordonnées des centres historiques).</em></p>
 
 
+</section>
 </section>
 
 </main> <!-- /main -->

@@ -4,32 +4,26 @@ title: "Géotraitements Vecteur"
 
 ## Introduction
 
-Cette page présente les géotraitements vectoriels appliqués aux données IRIS et Filosofi
-pour analyser les inégalités de revenus à Aix-en-Provence et Marseille.
+Cette page présente les géotraitements vectoriels appliqués aux données IRIS et Filosofi pour analyser les inégalités de niveau de vie à Aix-en-Provence et Marseille.
 
-## Schéma de géotraitement
-
-```
-Admin Express (couche "commune", 34 879 communes)
-  └─► Filtre nom_officiel %in% {"Aix-en-Provence", "Marseille"}
-        └─► communes  ─────────────────────────────────────────┐
-                                                               │
+## Schéma de géotraitementAdmin Express (couche "commune", 34 879 communes)
+└─► Filtre nom_officiel %in% {"Aix-en-Provence", "Marseille"}
+└─► communes  ─────────────────────────────────────────┐
+│
 IRIS France (couche "contours_iris_pe", 48 512 IRIS)           │
-  └─► wkt_filter sur emprise + st_intersection                 │
-        └─► iris.gpkg                                          │
-                                                               │
+└─► wkt_filter sur emprise + st_intersection                 │
+└─► iris.gpkg                                          │
+│
 Filosofi (couche "carreaux_200m_met", 2 298 582 carreaux)      │
-  └─► wkt_filter sur emprise + st_filter ◄─────────────────────┘
-        └─► filosofi.gpkg
-```
-
-## Librairies
+└─► wkt_filter sur emprise + st_filter ◄─────────────────────┘
+└─► filosofi.gpkg## Librairies
 
 ```{r}
 #| message: false
 #| warning: false
 library(sf)
 library(mapsf)
+library(mapview)
 ```
 
 ## Chargement et préparation des données
@@ -47,7 +41,8 @@ communes_fr <- st_read(path_admin, layer = "commune", quiet = TRUE)
 communes <- communes_fr[
   communes_fr$nom_officiel %in% c("Aix-en-Provence", "Marseille"), 
 ]
-cat("Communes sélectionnées :", nrow(communes), "\n")
+cat("Communes sélectionnées :", nrow(communes), "
+")
 ```
 
 ```{r}
@@ -58,8 +53,9 @@ cat("Communes sélectionnées :", nrow(communes), "\n")
 emprise_wkt <- st_as_text(st_as_sfc(st_bbox(communes)))
 iris_fr <- st_read(path_iris, layer = "contours_iris_pe",
                    wkt_filter = emprise_wkt, quiet = TRUE)
-iris <- st_filter(iris_fr, communes)
-cat("IRIS sur Aix + Marseille :", nrow(iris), "\n")
+iris <- iris_fr[grepl("^(Aix-en-Provence|Marseille)", iris_fr$nom_commune), ]
+cat("IRIS sur Aix + Marseille :", nrow(iris), "
+")
 ```
 
 ```{r}
@@ -70,7 +66,8 @@ cat("IRIS sur Aix + Marseille :", nrow(iris), "\n")
 filosofi_fr <- st_read(path_filo, layer = "carreaux_200m_met",
                        wkt_filter = emprise_wkt, quiet = TRUE)
 filosofi <- st_filter(filosofi_fr, communes)
-cat("Carreaux sur Aix + Marseille :", nrow(filosofi), "\n")
+cat("Carreaux sur Aix + Marseille :", nrow(filosofi), "
+")
 ```
 
 ```{r}
@@ -85,18 +82,26 @@ filosofi <- st_join(
 )
 filosofi$ville <- filosofi$nom_officiel
 
+# Calcul du niveau de vie moyen par habitant (€/an/UC)
+# ind_snv = somme des niveaux de vie winsorisés (INSEE Filosofi 2021)
+# ind     = nombre d'individus du carreau
+filosofi$niveau_vie <- filosofi$ind_snv / filosofi$ind
+
 # 5. Sauvegarder
 st_write(communes, "data/communes.gpkg", delete_dsn = TRUE, quiet = TRUE)
 st_write(iris,     "data/iris.gpkg",     delete_dsn = TRUE, quiet = TRUE)
 st_write(filosofi, "data/filosofi.gpkg", delete_dsn = TRUE, quiet = TRUE)
-cat("Données sauvegardées dans data/ ✓\n")
+cat("Données sauvegardées dans data/ ✓
+")
 ```
 
-## Carte du revenu médian par carreau
+## Carte du niveau de vie moyen — vue d'ensemble
+
+Cette première carte couvre les deux communes simultanément. Discrétisation en quantiles (chaque classe contient un nombre égal de carreaux), permettant de mieux visualiser les contrastes spatiaux.
 
 ```{r}
-#| fig-width: 9
-#| fig-height: 7
+#| fig-width: 10
+#| fig-height: 8
 #| message: false
 #| warning: false
 
@@ -104,19 +109,85 @@ mf_map(communes, col = "grey90", border = "white")
 mf_map(
   filosofi,
   type      = "choro",
-  var       = "ind_snv",
-  nbreaks   = 5,
-  pal       = "Reds",
+  var       = "niveau_vie",
+  breaks    = "quantile",
+  nbreaks   = 7,
+  pal       = "RdYlGn",
   border    = NA,
-  leg_title = "Revenu médian\n(€/UC)",
+  leg_title = "Niveau de vie moyen\n(€/an/UC)",
+  leg_val_rnd = 0,
   add       = TRUE
 )
 mf_map(communes, col = NA, border = "black", lwd = 1.5, add = TRUE)
-mf_title("Revenus médians par carreau 200m\nAix-en-Provence et Marseille")
+mf_title("Niveau de vie moyen par carreau 200m\nAix-en-Provence et Marseille (Filosofi 2021)")
+mf_credits("Sources : INSEE Filosofi 2021 | IGN Admin Express 2025")
+```
+
+## Cartes zoomées par ville
+
+Pour mieux distinguer les contrastes intra-urbains, voici une carte par commune.
+
+### Marseille
+
+```{r}
+#| fig-width: 10
+#| fig-height: 8
+#| message: false
+#| warning: false
+
+filo_marseille <- filosofi[!is.na(filosofi$ville) & filosofi$ville == "Marseille", ]
+commune_m <- communes[communes$nom_officiel == "Marseille", ]
+
+mf_map(commune_m, col = "grey90", border = "white")
+mf_map(
+  filo_marseille,
+  type      = "choro",
+  var       = "niveau_vie",
+  breaks    = "quantile",
+  nbreaks   = 7,
+  pal       = "RdYlGn",
+  border    = NA,
+  leg_title = "Niveau de vie moyen\n(€/an/UC)",
+  leg_val_rnd = 0,
+  add       = TRUE
+)
+mf_map(commune_m, col = NA, border = "black", lwd = 1.5, add = TRUE)
+mf_title("Marseille — Niveau de vie moyen par carreau")
+mf_credits("Sources : INSEE Filosofi 2021 | IGN Admin Express 2025")
+```
+
+### Aix-en-Provence
+
+```{r}
+#| fig-width: 10
+#| fig-height: 8
+#| message: false
+#| warning: false
+
+filo_aix <- filosofi[!is.na(filosofi$ville) & filosofi$ville == "Aix-en-Provence", ]
+commune_a <- communes[communes$nom_officiel == "Aix-en-Provence", ]
+
+mf_map(commune_a, col = "grey90", border = "white")
+mf_map(
+  filo_aix,
+  type      = "choro",
+  var       = "niveau_vie",
+  breaks    = "quantile",
+  nbreaks   = 7,
+  pal       = "RdYlGn",
+  border    = NA,
+  leg_title = "Niveau de vie moyen\n(€/an/UC)",
+  leg_val_rnd = 0,
+  add       = TRUE
+)
+mf_map(commune_a, col = NA, border = "black", lwd = 1.5, add = TRUE)
+mf_title("Aix-en-Provence — Niveau de vie moyen par carreau")
 mf_credits("Sources : INSEE Filosofi 2021 | IGN Admin Express 2025")
 ```
 
 ## Comparaison centre vs périphérie
+
+On définit le centre comme un cercle de 2 km de rayon autour du centroïde géométrique de chaque commune. Cette approximation reste imparfaite (le vrai centre historique de Marseille est le Vieux-Port, légèrement décalé du centroïde), mais permet une comparaison cohérente entre les deux villes.
 
 ```{r}
 #| message: false
@@ -135,16 +206,16 @@ in_m <- st_intersects(filo_m, buffer_m, sparse = FALSE)[, 1]
 in_a <- st_intersects(filo_a, buffer_a, sparse = FALSE)[, 1]
 
 cat("=== MARSEILLE ===\n")
-cat("  Centre (<2km)  — médiane :", round(median(filo_m$ind_snv[in_m],  na.rm = TRUE)), "€\n")
-cat("  Périphérie     — médiane :", round(median(filo_m$ind_snv[!in_m], na.rm = TRUE)), "€\n\n")
+cat("  Centre (<2km)  — médiane :", round(median(filo_m$niveau_vie[in_m],  na.rm = TRUE)), "€/an\n")
+cat("  Périphérie     — médiane :", round(median(filo_m$niveau_vie[!in_m], na.rm = TRUE)), "€/an\n\n")
 cat("=== AIX-EN-PROVENCE ===\n")
-cat("  Centre (<2km)  — médiane :", round(median(filo_a$ind_snv[in_a],  na.rm = TRUE)), "€\n")
-cat("  Périphérie     — médiane :", round(median(filo_a$ind_snv[!in_a], na.rm = TRUE)), "€\n")
+cat("  Centre (<2km)  — médiane :", round(median(filo_a$niveau_vie[in_a],  na.rm = TRUE)), "€/an\n")
+cat("  Périphérie     — médiane :", round(median(filo_a$niveau_vie[!in_a], na.rm = TRUE)), "€/an\n")
 ```
 
 ```{r}
-#| fig-width: 9
-#| fig-height: 7
+#| fig-width: 10
+#| fig-height: 8
 #| message: false
 #| warning: false
 
@@ -152,17 +223,50 @@ mf_map(communes, col = "grey95", border = "grey60")
 mf_map(
   filosofi,
   type      = "choro",
-  var       = "ind_snv",
-  nbreaks   = 5,
+  var       = "niveau_vie",
+  breaks    = "quantile",
+  nbreaks   = 7,
   pal       = "RdYlGn",
   border    = NA,
   alpha     = 0.8,
   add       = TRUE,
-  leg_title = "Revenu médian\n(€/UC)"
+  leg_title = "Niveau de vie moyen\n(€/an/UC)",
+  leg_val_rnd = 0
 )
 mf_map(communes, col = NA, border = "black", lwd = 1.5, add = TRUE)
 mf_map(buffer_m, col = NA, border = "red",  lwd = 2, lty = 2, add = TRUE)
 mf_map(buffer_a, col = NA, border = "blue", lwd = 2, lty = 2, add = TRUE)
-mf_title("Revenus médians — zones centre (2km) et périphérie")
+mf_title("Niveau de vie moyen — zones centre (2 km) et périphérie")
 mf_credits("Sources : INSEE Filosofi 2021 | IGN Admin Express 2025")
 ```
+
+## Carte interactive
+
+La carte ci-dessous permet d'explorer les données de manière dynamique : zoomer, dézoomer, et cliquer sur un carreau pour voir sa valeur exacte de niveau de vie. Plusieurs fonds de carte sont disponibles (OpenStreetMap par défaut, satellite, etc.).
+
+```{r}
+#| message: false
+#| warning: false
+
+# Préparer les données : on garde uniquement les colonnes utiles pour l'affichage
+filo_interactif <- filosofi[, c("ville", "niveau_vie", "ind", "men")]
+filo_interactif$niveau_vie <- round(filo_interactif$niveau_vie)
+
+# Carte interactive avec mapview
+mapview(
+  filo_interactif,
+  zcol      = "niveau_vie",
+  layer.name = "Niveau de vie moyen (€/an/UC)",
+  col.regions = hcl.colors(7, "RdYlGn"),
+  alpha.regions = 0.7,
+  lwd       = 0
+) +
+mapview(
+  communes,
+  layer.name = "Limites communales",
+  alpha.regions = 0,
+  color = "black",
+  lwd = 2
+)
+```
+

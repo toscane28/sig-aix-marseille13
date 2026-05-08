@@ -4,45 +4,101 @@ title: "Inégalités centre-périphérie à Aix-en-Provence et Marseille"
 
 ## Introduction
 
-Ce projet analyse les inégalités de revenus entre le centre-ville et la périphérie
-de deux grandes villes méditerranéennes : **Aix-en-Provence** et **Marseille**.
+Ce projet de SIG analyse les **inégalités de niveau de vie** entre le centre-ville et la périphérie de deux grandes villes méditerranéennes : **Aix-en-Provence** et **Marseille**. Ces deux communes voisines (~30 km de distance) appartiennent à la même métropole (Aix-Marseille-Provence) mais présentent des profils socio-spatiaux supposés opposés.
 
-Ces deux villes constituent un cas d'étude particulièrement intéressant car elles
-présentent des profils socio-spatiaux supposément opposés : Aix-en-Provence est
-historiquement associée à une population aisée et un centre-ville riche, tandis que
-Marseille est marquée par une pauvreté concentrée dans certains quartiers centraux
-(notamment les quartiers nord) contrastant avec des périphéries résidentielles plus aisées.
+**Aix-en-Provence**, ancienne capitale de la Provence, est historiquement associée à une population aisée concentrée autour de son centre historique (la Place de la Rotonde, le cours Mirabeau, le quartier Mazarin). **Marseille**, premier port de France, est traversée par des dynamiques territoriales complexes : un centre-ville historique (Vieux-Port, Belle-de-Mai, Noailles) souvent associé à la pauvreté et à la précarité urbaine, des **quartiers nord** très défavorisés, et des arrondissements sud (7ᵉ, 8ᵉ : Endoume, Bonneveine, le Roucas-Blanc) parmi les plus aisés de la commune.
+
+Ce contraste rend la comparaison particulièrement riche pour interroger le **modèle classique du gradient centre-périphérie** dans les villes françaises.
 
 ## Problématique
 
-**Dans quelle mesure les inégalités de revenus entre centre et périphérie
-diffèrent-elles entre Aix-en-Provence et Marseille ?**
+**Dans quelle mesure les inégalités de niveau de vie entre centre et périphérie diffèrent-elles entre Aix-en-Provence et Marseille, et le modèle radial du gradient centre-périphérie est-il pertinent pour décrire ces deux villes ?**
 
-L'hypothèse est double :
+L'hypothèse de départ est double :
 
-- À **Marseille**, le centre concentre la pauvreté tandis que la périphérie
-  résidentielle (sud, est) présente des revenus plus élevés.
-- À **Aix-en-Provence**, le schéma est inversé : le centre historique
-  est riche et les marges périphériques sont plus modestes.
+- À **Marseille**, le centre historique concentre la pauvreté tandis que les périphéries (en particulier les arrondissements sud) présentent des niveaux de vie plus élevés.
+- À **Aix-en-Provence**, le schéma serait inversé : centre historique aisé et marges périphériques plus modestes.
+
+Cette hypothèse sera testée à travers trois approches complémentaires : (1) une analyse vectorielle directe par carreau Filosofi 200m, (2) une analyse raster de la distance au centre couplée à une régression linéaire du niveau de vie, et (3) une jointure spatiale agrégeant les carreaux à l'échelle administrative des IRIS.
 
 ## Données utilisées
 
-| Donnée | Source | Millésime | Usage dans le projet |
-|---|---|---|---|
-| Contours IRIS (PE) | IGN / cartes.gouv.fr | 2025 | Maillage infra-communal |
-| Carreaux 200m Filosofi | INSEE | 2021 | Revenu médian par unité de consommation |
-| Admin Express COG Cartoplus | IGN / cartes.gouv.fr | 2025 | Limites communales (Lambert-93) |
+| Donnée | Source | Millésime | Format | Description | Usage dans le projet |
+|---|---|---|---|---|---|
+| Contours IRIS (PE) | [IGN / cartes.gouv.fr](https://geoservices.ign.fr/contoursiris) | 2025 | GeoPackage (Lambert-93) | Maillage infra-communal des îlots regroupés pour l'information statistique (IRIS) en France | Maille administrative pour l'agrégation des données |
+| Carreaux 200m Filosofi | [INSEE](https://www.insee.fr/fr/statistiques/8735162) | 2021 | GeoPackage (Lambert-93) | Données fiscales et sociales carroyées : 34 variables par carreau de 200×200m, dont `ind` (nombre d'individus) et `ind_snv` (somme winsorisée des niveaux de vie) | Source principale pour le calcul du niveau de vie moyen |
+| Admin Express COG Cartoplus | [IGN / cartes.gouv.fr](https://geoservices.ign.fr/adminexpress) | 2025 | GeoPackage (Lambert-93) | Limites administratives officielles des communes françaises | Définition des emprises Aix et Marseille |
+
+### Note méthodologique sur le niveau de vie
+
+Le niveau de vie moyen par carreau est calculé selon la documentation INSEE Filosofi 2021 :
+
+$$\text{niveau\_vie} = \frac{\text{ind\_snv}}{\text{ind}}$$
+
+où `ind_snv` est la **somme** des niveaux de vie winsorisés des individus du carreau (revenu disponible du ménage divisé par les unités de consommation), et `ind` le nombre d'individus. Le résultat est exprimé en **euros par an et par unité de consommation (€/an/UC)**.
 
 ## Organisation du site
 
-- **GT Vecteur** : préparation des données, cartes de revenus par carreau, comparaison centre/périphérie
-- **GT Raster** : raster de distance au centre, relation distance-revenu
-- **Jointures** : agrégation des carreaux Filosofi à l'échelle des IRIS
+- **[GT Vecteur](vecteur.html)** : préparation des données, cartes choroplèthes du niveau de vie par carreau (vue d'ensemble, Marseille seule, Aix seule), zones centre/périphérie par buffer 2 km, et **carte interactive `mapview`** pour exploration détaillée.
+
+- **[GT Raster](raster.html)** : construction de rasters de distance au centre selon deux définitions (centroïde géométrique vs centre historique reconnu), régressions linéaires niveau de vie ~ distance, comparaison méthodologique des résultats.
+
+- **[Jointures](jointure.html)** : jointure spatiale entre les 5 681 carreaux Filosofi et les 447 IRIS, agrégation par moyenne pondérée par la population, comparaison statistique Aix vs Marseille (boxplot et résumés).
+
+## Principaux résultats
+
+### À l'échelle des IRIS (jointure spatiale, 99,7 % de carreaux joints)
+
+| Statistique | Aix-en-Provence | Marseille |
+|---|---|---|
+| Nombre d'IRIS | 54 | 386 |
+| Médiane (€/an/UC) | **28 255** | **22 507** |
+| Moyenne (€/an/UC) | 27 223 | 23 041 |
+| Écart-type (€/an/UC) | 5 007 | 5 531 |
+| Min – Max | 15 758 – 35 965 | 13 185 – 39 055 |
+
+**Aix présente un niveau de vie médian supérieur de +25,5 %** par rapport à Marseille, et une distribution plus homogène. Marseille est plus polarisée : son maximum dépasse celui d'Aix, mais son minimum est aussi plus bas, traduisant une forte fragmentation socio-spatiale interne.
+
+### Gradient centre-périphérie (régressions raster)
+
+| Ville | Centre considéré | Pente (€/km) | R² |
+|---|---|---|---|
+| Marseille | Centroïde géométrique | +56,0 | 0,000 |
+| **Marseille** | **Vieux-Port (centre historique)** | **+738,6** | **0,085** |
+| Aix-en-Provence | Centroïde géométrique | +93,5 | 0,001 |
+| Aix-en-Provence | Place de la Rotonde | +61,7 | 0,001 |
+
+À **Marseille**, lorsqu'on choisit le **Vieux-Port** comme centre, la régression révèle un **gradient positif statistiquement détectable** : chaque kilomètre d'éloignement du Vieux-Port s'accompagne en moyenne d'une hausse de +738 € du niveau de vie annuel. Le centre historique est donc effectivement plus pauvre que les périphéries, conformément à l'hypothèse.
+
+À **Aix-en-Provence**, en revanche, **aucun gradient n'est détectable** (R² ≈ 0), quel que soit le centre considéré. La commune est socio-spatialement homogène : il n'existe pas d'opposition centre/périphérie en termes de niveau de vie.
 
 ## Conclusion
 
-*(à compléter après les analyses)*
+L'analyse géomatique des données INSEE Filosofi 2021 et IGN apporte des éléments de réponse **quantitatifs et nuancés** à la problématique posée.
 
-Les résultats confirment-ils l'hypothèse d'une inversion du gradient centre-périphérie
-entre les deux villes ? Les cartes et analyses des pages suivantes apportent des éléments
-de réponse quantitatifs à cette question.
+**Premièrement**, l'hypothèse d'une **différence importante entre Aix et Marseille est confirmée** : Aix-en-Provence présente un niveau de vie médian par IRIS supérieur de 25,5 % à celui de Marseille (28 255 € contre 22 507 € par an et par UC), avec une dispersion plus faible (écart-type de 5 007 € contre 5 531 €).
+
+**Deuxièmement**, l'hypothèse d'une **inversion du gradient centre-périphérie entre les deux villes est partiellement validée**, mais elle nécessite une **précision méthodologique cruciale** : le choix du "centre" change radicalement les résultats. Avec le centroïde géométrique, aucun gradient n'apparaît dans les deux villes. Mais lorsqu'on prend les **véritables centres historiques** (Vieux-Port, Place de la Rotonde), Marseille révèle un gradient positif significatif (+738 €/km, R² = 0,085) : son centre est bien plus pauvre que ses périphéries. Aix, en revanche, conserve un gradient quasi-nul, signe d'une **homogénéité socio-spatiale** qui distingue cette ville moyenne du modèle marseillais.
+
+**Troisièmement**, le résultat le plus saillant n'est pas tant une "inversion" qu'une **différence de structure spatiale** :
+
+- **Marseille** présente une organisation **fragmentée et sectorielle** (opposition nord/sud le long de la côte, gradient radial atténué depuis le Vieux-Port).
+- **Aix** présente une organisation **homogène** (peu de variations internes, niveau de vie globalement aisé sur l'ensemble de la commune).
+
+Plutôt qu'un simple "centre riche vs centre pauvre", c'est donc la **morphologie même des inégalités urbaines** qui distingue ces deux villes : **dispersion à Marseille, concentration à Aix**.
+
+### Limites de l'étude
+
+- Le découpage en "centre" (buffer de 2 km) reste arbitraire et ne reflète pas exactement les limites perçues du centre-ville par les habitants.
+- Le niveau de vie *moyen* (calculé par `ind_snv / ind`) diffère légèrement de la *médiane* qui est l'indicateur INSEE de référence pour les revenus.
+- L'étude n'inclut que deux variables (niveau de vie et distance) ; une approche multivariée (logement social, chômage, démographie) permettrait d'affiner l'analyse.
+- La régression linéaire suppose une relation monotone qui peut masquer des structures spatiales plus complexes (poches, quartiers).
+
+### Prolongements possibles
+
+Une suite naturelle serait d'élargir la comparaison à d'autres villes méditerranéennes (Nice, Toulon, Montpellier) ou de croiser les données fiscales avec d'autres indicateurs (taux de chômage, part de logement social, accès aux services publics) pour mieux qualifier les structures socio-spatiales observées.
+
+---
+
+*Site réalisé dans le cadre d'un devoir de SIG. Sources : INSEE Filosofi 2021, IGN Admin Express et IRIS 2025, OpenStreetMap (coordonnées des centres historiques).*
+

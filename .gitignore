@@ -7,3 +7,9 @@
 /.quarto/
 **/*.quarto_ipynb
 data/ 
+*_backup.qmd 
+/site_libs/ 
+/vecteur_files/ 
+/jointure_files/ 
+/raster_files/ 
+/index_files/ 
